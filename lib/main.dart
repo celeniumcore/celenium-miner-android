@@ -32,6 +32,7 @@ import 'widgets/ad_banner.dart';
 import 'widgets/hacker_fx.dart';
 import 'widgets/brand_mark.dart';
 import 'widgets/cen_ui.dart';
+
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 
 void main() {
@@ -653,7 +654,10 @@ class _MinerHomeState extends State<MinerHome> {
     final open = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: Text(l10n.batteryTitle, style: TypeScale.headline(dialogContext)),
+        title: Text(
+          l10n.batteryTitle,
+          style: TypeScale.headline(dialogContext),
+        ),
         content: Text(l10n.batteryBody, style: TypeScale.label(dialogContext)),
         actions: [
           TextButton(

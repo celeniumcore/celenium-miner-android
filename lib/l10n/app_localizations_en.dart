@@ -71,7 +71,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get statusOffline => 'OFFLINE';
 
   @override
-  String get navMine => 'Mine';
+  String get navMine => 'Claim';
 
   @override
   String get navWallet => 'Wallet';

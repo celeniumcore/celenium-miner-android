@@ -566,8 +566,8 @@ class _FaucetCardState extends State<_FaucetCard> {
       final String msg = result.ok
           ? l10n.faucetClaimed(result.rewardPradha)
           : (result.error == 'already claimed today'
-              ? l10n.faucetAlreadyClaimed
-              : l10n.faucetClaimFailed);
+                ? l10n.faucetAlreadyClaimed
+                : l10n.faucetClaimFailed);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
       await _refresh();
     } on Object {

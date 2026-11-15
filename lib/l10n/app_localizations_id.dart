@@ -71,7 +71,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get statusOffline => 'TERPUTUS';
 
   @override
-  String get navMine => 'Tambang';
+  String get navMine => 'Klaim';
 
   @override
   String get navWallet => 'Dompet';

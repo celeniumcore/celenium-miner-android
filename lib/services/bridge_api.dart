@@ -13,7 +13,7 @@ import '../models/bridge.dart';
 /// headers are needed.
 class BridgeApi {
   BridgeApi({required this.baseUrl, http.Client? client})
-      : _client = client ?? http.Client();
+    : _client = client ?? http.Client();
 
   /// Base URL, for example `http://127.0.0.1:3030`. No trailing slash.
   final String baseUrl;
@@ -99,7 +99,10 @@ class BridgeApi {
   /// [deviceId] is the Android ID: the faucet caps how many distinct wallets a
   /// single device may register (anti-sybil). It is sent raw, never stored.
   Future<FaucetClaimResult> claimFaucet(String address, String deviceId) async {
-    final body = await _post('/api/faucet/claim', {'address': address, 'deviceId': deviceId});
+    final body = await _post('/api/faucet/claim', {
+      'address': address,
+      'deviceId': deviceId,
+    });
     final parsed = FaucetClaimResult.tryParse(body);
     if (parsed == null) {
       throw const FormatException('Bridge returned an unexpected faucet body');

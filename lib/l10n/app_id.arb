@@ -20,7 +20,7 @@
   "statusIdle": "IDLE",
   "statusOnline": "TERSAMBUNG",
   "statusOffline": "TERPUTUS",
-  "navMine": "Tambang",
+  "navMine": "Klaim",
   "navWallet": "Dompet",
   "navProfile": "Profil",
   "splashEnterSemantics": "Masuk ke konsol mining",

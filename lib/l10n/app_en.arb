@@ -20,7 +20,7 @@
   "statusIdle": "IDLE",
   "statusOnline": "ONLINE",
   "statusOffline": "OFFLINE",
-  "navMine": "Mine",
+  "navMine": "Claim",
   "navWallet": "Wallet",
   "navProfile": "Profile",
   "splashEnterSemantics": "Enter the mining console",

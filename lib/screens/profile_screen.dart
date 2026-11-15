@@ -70,10 +70,9 @@ class ProfileScreen extends StatelessWidget {
               Expanded(
                 child: Text(
                   l10n.profileTitle.toUpperCase(),
-                  style: TypeScale.caption(context).copyWith(
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 0.8,
-                  ),
+                  style: TypeScale.caption(
+                    context,
+                  ).copyWith(fontWeight: FontWeight.w700, letterSpacing: 0.8),
                 ),
               ),
               LiveStatus(
