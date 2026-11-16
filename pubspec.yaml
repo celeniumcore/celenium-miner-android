@@ -1,7 +1,7 @@
 name: celenium_miner
 description: "Celenium (CEN) mining control for desktop and Android."
 publish_to: 'none'
-version: 1.0.7+9007
+version: 1.0.8+9008
 
 environment:
   sdk: ^3.13.7
@@ -76,3 +76,6 @@ flutter:
     - assets/logo/cen_mark_on_cream.jpg
     - assets/logo/cen_mark_for_dark.png
     - assets/logo/cen_mark_for_light.png
+    - assets/logo/logocelenium.png
+    - assets/logo/logocelenium_glow_dark.png
+    - assets/logo/logocelenium_glow_light.png

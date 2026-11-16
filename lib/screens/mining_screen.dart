@@ -3,11 +3,13 @@ import 'package:flutter/services.dart';
 
 import '../l10n/l10n.dart';
 import '../services/mining_readout.dart';
+import '../services/bridge_api.dart';
 import '../theme/layout.dart';
 import '../theme/palette.dart';
 import '../theme/typography.dart';
 import '../widgets/brand_mark.dart';
 import '../widgets/cen_ui.dart';
+import '../widgets/faucet_card.dart';
 import '../widgets/mining_dial.dart';
 
 /// Mining console.
@@ -23,6 +25,8 @@ class MiningScreen extends StatelessWidget {
     required this.onOpenActivity,
     this.onConnectNode,
     this.onSetMining,
+    this.faucetAddress,
+    this.faucetApi,
   });
 
   final MiningReadout readout;
@@ -33,6 +37,8 @@ class MiningScreen extends StatelessWidget {
   /// Starts or stops the local miner. The dial's inner disc calls this with
   /// the new switch position; the engine does the hashing.
   final ValueChanged<bool>? onSetMining;
+  final String? faucetAddress;
+  final BridgeApi? faucetApi;
 
   /// Headroom above the dial stage. The design review at 1.0.3 read the dial,
   /// its tap-to-start caption and the clock card as crammed against the top
@@ -66,12 +72,16 @@ class MiningScreen extends StatelessWidget {
           children: [
             // The lower opening also drops the top card's brand mark: the
             // design review wanted the whole reading lower on the page.
-            SizedBox(height: Palette.xl),
+            const SizedBox(height: Palette.xl),
             summary,
             const SizedBox(height: _stageGap),
             dial,
             const SizedBox(height: _tailGap),
             stats,
+            if (faucetAddress != null && faucetAddress!.isNotEmpty) ...[
+              const SizedBox(height: Palette.xl),
+              FaucetCard(address: faucetAddress!, api: faucetApi),
+            ],
             const SizedBox(height: Palette.xxl),
           ],
         ),
@@ -104,7 +114,13 @@ class MiningScreen extends StatelessWidget {
               flex: 44,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [stats],
+                children: [
+                  stats,
+                  if (faucetAddress != null && faucetAddress!.isNotEmpty) ...[
+                    const SizedBox(height: Palette.lg),
+                    FaucetCard(address: faucetAddress!, api: faucetApi),
+                  ],
+                ],
               ),
             ),
           ],
@@ -368,10 +384,7 @@ class _ActiveTimeCell extends StatelessWidget {
           child: Text(
             _uptime(readout.sessionUptime),
             maxLines: 1,
-            style: TypeScale.mono(
-              context,
-              size: 14,
-            ).copyWith(
+            style: TypeScale.mono(context, size: 14).copyWith(
               color: mining ? Palette.greenDim : Palette.slateLight,
               fontWeight: FontWeight.w700,
             ),
@@ -402,10 +415,7 @@ class _MiningStatusCell extends StatelessWidget {
       children: [
         Text(
           mining ? 'ON' : 'OFF',
-          style: TypeScale.mono(
-            context,
-            size: 14,
-          ).copyWith(
+          style: TypeScale.mono(context, size: 14).copyWith(
             color: mining ? Palette.green : Palette.slateLight,
             fontWeight: FontWeight.w700,
           ),

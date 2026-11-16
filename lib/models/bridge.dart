@@ -342,11 +342,15 @@ class FaucetBalance {
   final int balancePradha;
   final int totalClaimedPradha;
   final bool canClaimToday;
+  final int rewardPradha;
+  final int claimedTodayPradha;
 
   const FaucetBalance({
     required this.balancePradha,
     required this.totalClaimedPradha,
     required this.canClaimToday,
+    required this.rewardPradha,
+    required this.claimedTodayPradha,
   });
 
   /// `null` when the bridge is not ready or the body is not the expected shape.
@@ -356,11 +360,15 @@ class FaucetBalance {
     final balance = json['balancePradha'];
     final total = json['totalClaimedPradha'];
     final can = json['canClaimToday'];
+    final reward = json['rewardPradha'];
+    final claimed = json['claimedTodayPradha'];
     if (balance is! num || total is! num || can is! bool) return null;
     return FaucetBalance(
       balancePradha: balance.toInt(),
       totalClaimedPradha: total.toInt(),
       canClaimToday: can,
+      rewardPradha: reward is num ? reward.toInt() : 0,
+      claimedTodayPradha: claimed is num ? claimed.toInt() : 0,
     );
   }
 }

@@ -1,274 +1,275 @@
 {
-  "@@locale": "id",
-  "commonClose": "Tutup",
-  "commonCancel": "Batal",
-  "commonContinue": "Lanjutkan",
-  "commonDone": "Selesai",
-  "commonSave": "Simpan",
-  "commonSaving": "Menyimpan…",
-  "commonImport": "Impor",
-  "commonChecking": "Memeriksa…",
-  "commonCopy": "Salin",
-  "commonGotIt": "Mengerti",
-  "batteryTitle": "Agar mining jalan terus",
-  "batteryBody": "Android bisa menghentikan mining saat layar mati. Kecualikan Celenium Miner dari penghemat baterai supaya sesi 12 jam tidak terputus.",
-  "batteryOpen": "Buka pengaturan",
-  "batteryLater": "Nanti saja",
-  "commonToday": "HARI INI",
-  "commonYesterday": "KEMARIN",
-  "statusActive": "AKTIF",
-  "statusIdle": "IDLE",
-  "statusOnline": "TERSAMBUNG",
-  "statusOffline": "TERPUTUS",
-  "navMine": "Klaim",
-  "navWallet": "Dompet",
-  "navProfile": "Profil",
-  "splashEnterSemantics": "Masuk ke konsol mining",
-  "splashEnter": "MASUK",
-  "mineNodeNotSet": "node belum diatur",
-  "mineCardLabel": "Celenium Miner",
-  "mineHashRate": "Laju hash",
-  "mineConnected": "connect",
-  "mineBridgeSilent": "Bridge belum menjawab. Atur alamatnya untuk mulai membaca angka langsung.",
-  "mineSetBridge": "Atur alamat bridge",
-  "mineNoInternalMiner": "MINER INTERNAL TIDAK TERSEDIA",
-  "mineMiningOn": "MINING AKTIF",
-  "mineMiningOff": "MINING BERHENTI",
-  "mineTapToStart": "Ketuk logo untuk mulai",
-  "mineTapToStop": "Ketuk logo untuk berhenti",
-  "mineRestartHint": "Ketuk logo untuk mulai sesi baru",
-  "mineToggleSemantics": "Mulai atau hentikan mining",
-  "mineWaitingShare": "> menunggu share pertama",
-  "mineShareAccepted": "> share diterima {hash}",
-  "@mineShareAccepted": {
-    "placeholders": {
-      "hash": {
-        "type": "String",
-        "example": "abc123de…ef4567"
-      }
-    }
-  },
-  "mineAcceptanceSemantics": "Rasio share diterima. Buka worker.",
-  "mineAcceptanceRate": "PENERIMAAN\n{rate}%",
-  "@mineAcceptanceRate": {
-    "placeholders": {
-      "rate": {
-        "type": "String",
-        "example": "98"
-      }
-    }
-  },
-  "mineSessionLabel": "sesi",
-  "mineTotalLabel": "total",
-  "mineSharesUnit": "share",
-  "mineAcceptedLabel": "diterima",
-  "mineRejectedLabel": "ditolak",
-  "mineActiveTime": "Waktu aktif",
-  "mineStatus": "Status",
-  "mineConnecting": "MENGHUBUNGKAN",
-  "mineNeedsWallet": "RESTART UNTUK BUAT DOMPET",
-  "mineLimitReached": "BATAS 12 JAM",
-  "mineError": "MINER GALAT",
-  "mineAcceptedCount": "DITERIMA {count}",
-  "@mineAcceptedCount": {
-    "placeholders": {
-      "count": {
-        "type": "int",
-        "example": "7"
-      }
-    }
-  },
-  "mineNoBlock": "belum ada blok diterima",
-  "mineBlockAccepted": "blok diterima {hash}",
-  "@mineBlockAccepted": {
-    "placeholders": {
-      "hash": {
-        "type": "String",
-        "example": "abc123de…ef4567"
-      }
-    }
-  },
-  "walletTitle": "Dompet",
-  "walletTransactions": "Transaksi",
-  "walletSeeAll": "LIHAT SEMUA",
-  "walletNoTxReason": "Belum ada transaksi. Koin yang masuk atau terkirim akan muncul di sini.",
-  "walletTotalBalance": "Saldo total",
-  "walletNoBalanceNote": "Saldo muncul setelah bridge terhubung ke node yang tersinkron.",
-  "walletMiningAddress": "Alamat mining",
-  "walletAddressCopied": "Alamat disalin",
-  "walletCopyAddress": "Salin alamat",
-  "walletShowAddress": "Tampilkan alamat",
-  "walletHideAddress": "Sembunyikan alamat",
-  "walletShowBalance": "Tampilkan saldo",
-  "walletHideBalance": "Sembunyikan saldo",
-  "walletSend": "Kirim",
-  "walletReceive": "Terima",
-  "walletSwap": "Tukar",
-  "walletBackupWords": "Cadangkan kata pemulihan",
-  "walletSwapSoon": "SEGERA HADIR",
-  "walletSwapUnavailable": "Tukar belum tersedia",
-  "walletSwapBody": "CEN belum terdaftar di bursa mana pun, jadi belum ada yang bisa ditukar.",
-  "walletReceiveNote": "Siapa pun yang punya alamat ini bisa mengirim koin ke sana. Aman untuk dibagikan.",
-  "walletMiningReward": "Imbalan mining",
-  "walletCoinIn": "Coin masuk",
-  "walletCoinOut": "Coin terkirim",
-  "walletSendTitle": "Kirim CEN",
-  "walletSendRecipient": "Alamat tujuan",
-  "walletSendAmount": "Jumlah",
-  "walletSendFee": "Biaya jaringan",
-  "walletSendConfirm": "Kirim",
-  "walletSendSending": "Mengirim…",
-  "walletSendNeedRecipient": "Masukkan alamat tujuan.",
-  "walletSendInvalidAmount": "Masukkan jumlah yang valid (maksimal 8 angka desimal).",
-  "walletSendBelowFee": "Jumlah lebih kecil dari biaya jaringan",
-  "walletSendNoKey": "Belum ada kata pemulihan di perangkat ini. Buat cadangannya dulu.",
-  "walletSendKeyMismatch": "Kata pemulihan di perangkat ini bukan pemilik alamat mining tersebut. Impor kata yang sesuai dulu.",
-  "walletSendFailed": "Node menolak transaksi ini.",
-  "walletSendSuccess": "Transaksi terkirim",
-  "walletSendSuccessBody": "Transaksi kini di mempool dan masuk ke chain begitu ada blok yang memuatnya.",
-  "walletSendTxId": "ID transaksi",
-  "walletSendNoAddress": "Belum ada alamat wallet",
-  "walletSendNoAddressBody": "Alamat muncul setelah bridge menambang blok pertama. Sebelum itu belum ada yang bisa dikirim.",
-  "walletSendNodeDown": "Node tidak terjangkau",
-  "walletSendNodeDownBody": "Wallet terhubung ke node lewat bridge. Buka tab Miner dan sambungkan node dulu.",
-  "backupTitle": "PEMULIHAN",
-  "backupImportError": "Frasa itu bukan frasa BIP39 yang valid. Periksa kata-katanya lalu coba lagi.",
-  "backupImported": "Terimpor {address}",
-  "@backupImported": {
-    "placeholders": {
-      "address": {
-        "type": "String",
-        "example": "cen69sim:qabc"
-      }
-    }
-  },
-  "backupRecoveryWords": "Kata pemulihan",
-  "backupIntro": "Dua belas kata yang membangun ulang kunci kamu di perangkat mana pun.",
-  "backupWhyTitle": "Kenapa ini penting",
-  "backupWhyBody": "Koin kamu berada di blockchain, terikat pada sebuah alamat. Koin itu tetap ada walau aplikasi dihapus. Yang tidak ikut tersimpan adalah kunci alamat tersebut, dan dua belas kata inilah kuncinya.",
-  "backupHowTitle": "Yang harus dilakukan",
-  "backupHowBody": "Tulis di kertas sesuai urutan, lalu simpan kertasnya di tempat selain ponsel ini. Jangan simpan di aplikasi catatan, tangkapan layar, atau pesan ke diri sendiri.",
-  "backupCreating": "Membuat…",
-  "backupCreateWords": "Buat kata pemulihan",
-  "backupHaveWords": "Saya sudah punya kata",
-  "backupWriteNow": "Tulis sekarang",
-  "backupWarningBody": "Siapa pun yang membaca dua belas kata ini bisa memindahkan semua koin di alamat kamu. Kata-kata ini hanya ditampilkan sekali. Setelah kamu keluar dari layar ini, kata-kata itu tidak tampil lagi.",
-  "backupWordsTitle": "12 kata kamu, sesuai urutan",
-  "backupWrittenCheck": "Saya sudah menulis kedua belas kata sesuai urutan",
-  "backupNotYet": "Belum dicadangkan",
-  "backupNotYetBody": "Kata pemulihan sudah ada di perangkat ini tapi belum dikonfirmasi tertulis. Selama belum, kehilangan ponsel ini berarti kehilangan kuncinya.",
-  "backupShowWords": "Tampilkan kata saya",
-  "backupDone": "Sudah dicadangkan",
-  "backupDoneBody": "Kata pemulihan kamu sudah dikonfirmasi tertulis. Simpan kertasnya di tempat selain ponsel ini.",
-  "backupIfDeletedTitle": "Kalau aplikasi dihapus",
-  "backupIfDeletedBody": "Koin tidak hilang: koin tetap di blockchain pada alamat kamu. Pasang ulang aplikasinya, pilih \"Saya sudah punya kata\", lalu masukkan kedua belas kata untuk mengambil alih alamat itu lagi.",
-  "backupShowAgain": "Tampilkan kata lagi",
-  "backupImportTitle": "Impor kata",
-  "backupImportIntro": "Masukkan 12 atau 24 kata yang sudah kamu punya untuk mengambil alih alamat itu di perangkat ini.",
-  "bridgeTitle": "BRIDGE",
-  "bridgeSaved": "Alamat bridge disimpan",
-  "bridgeAddress": "Alamat bridge",
-  "bridgeAddressNote": "Bridge menyajikan hasil mining lewat HTTP. Tidak ada akun dan tidak ada kredensial yang ikut dikirim.",
-  "bridgePollInterval": "Interval polling",
-  "bridgePollNote": "Seberapa sering aplikasi meminta angka baru ke bridge. Interval lebih pendek membuat tampilan lebih cepat berubah dan lebih boros baterai.",
-  "bridgeNode": "Node",
-  "bridgeInfoAddress": "Alamat",
-  "bridgeInfoVersion": "Versi",
-  "bridgeInfoInstances": "Instans",
-  "workersTitle": "WORKER",
-  "workersEmpty": "Belum ada worker yang melapor. Arahkan miner ke port stratum bridge dengan alamat CEN kamu sebagai nama worker, maka worker itu muncul di sini.",
-  "workersHashRate": "laju hash",
-  "workersBlocks": "blok",
-  "workersStaleInvalid": "{stale} usang · {invalid} tidak valid",
-  "@workersStaleInvalid": {
-    "placeholders": {
-      "stale": {
-        "type": "int",
-        "example": "1"
-      },
-      "invalid": {
-        "type": "int",
-        "example": "0"
-      }
-    }
-  },
-  "workersSession": "sesi {duration}",
-  "@workersSession": {
-    "placeholders": {
-      "duration": {
-        "type": "String",
-        "example": "1h 20m"
-      }
-    }
-  },
-  "logTitle": "AKTIVITAS",
-  "logEmpty": "Belum ada catatan. Perubahan koneksi dan blok yang baru diterima dicatat di sini saat terjadi.",
-  "logBridgeReachable": "Bridge terhubung di {address}",
-  "@logBridgeReachable": {
-    "placeholders": {
-      "address": {
-        "type": "String",
-        "example": "0.0.0.0:3030"
-      }
-    }
-  },
-  "logBridgeUnreachable": "Bridge tidak terhubung",
-  "logBlockAccepted": "Blok diterima ({newCount} baru, {total} total)",
-  "@logBlockAccepted": {
-    "placeholders": {
-      "newCount": {
-        "type": "int",
-        "example": "1"
-      },
-      "total": {
-        "type": "int",
-        "example": "3"
-      }
-    }
-  },
-  "logMinerStarted": "CPU miner internal mulai jalan",
-  "logMinerStopped": "CPU miner internal berhenti",
-  "logMinerToggleFailed": "Gagal mengubah status mining — bridge tidak merespons",
-  "logStaleShares": "{count} share usang dilaporkan",
-  "@logStaleShares": {
-    "placeholders": {
-      "count": {
-        "type": "int",
-        "example": "2"
-      }
-    }
-  },
-  "logPollFailed": "Polling gagal",
-  "logAdRequestFailed": "Permintaan iklan gagal",
-  "profileTitle": "Profil",
-  "profileSettings": "Pengaturan",
-  "profileNotSet": "belum diatur",
-  "profileBridgeRow": "Bridge",
-  "profileWorkersRow": "Worker",
-  "profileActivityRow": "Log aktivitas",
-  "profileRecoveryRow": "Kata pemulihan",
-  "profileAboutRow": "Tentang",
-  "profileDeviceUnknown": "IP/ID perangkat belum terbaca",
-  "profileLanguage": "Bahasa",
-  "profileLanguageSystem": "Ikuti sistem",
-  "profileLanguageDone": "Bahasa disimpan",
-  "aboutTitle": "TENTANG",
-  "aboutWhatTitle": "Fungsi aplikasi ini",
-  "aboutWhatBody": "Aplikasi ini membaca hasil mining dari sebuah bridge Celenium dan menampilkannya di ponsel kamu. Tidak ada akun, basis data, maupun koin yang disimpan di sini: hasilnya berada di blockchain dan di bridge, dan aplikasi ini hanya jendela untuk melihatnya.",
-  "aboutVersion": "Versi",
-  "aboutCreatedBy": "Dibuat oleh",
-  "faucetTitle": "Rewards partisipasi",
-  "faucetClaim": "Klaim harian",
-  "faucetClaiming": "Mengklaim…",
-  "faucetClaimed": "+{count} pradha diklaim",
-  "@faucetClaimed": {
-    "placeholders": {
-      "count": {
-        "type": "int",
-        "example": "1000"
-      }
-    }
-  },
-  "faucetClaimFailed": "Klaim gagal",
-  "faucetAlreadyClaimed": "Sudah klaim hari ini"
+    "@@locale": "id",
+    "commonClose": "Tutup",
+    "commonCancel": "Batal",
+    "commonContinue": "Lanjutkan",
+    "commonDone": "Selesai",
+    "commonSave": "Simpan",
+    "commonSaving": "Menyimpan…",
+    "commonImport": "Impor",
+    "commonChecking": "Memeriksa…",
+    "commonCopy": "Salin",
+    "commonGotIt": "Mengerti",
+    "batteryTitle": "Agar mining jalan terus",
+    "batteryBody": "Android bisa menghentikan mining saat layar mati. Kecualikan Celenium Miner dari penghemat baterai supaya sesi 24 jam tidak terputus.",
+    "batteryOpen": "Buka pengaturan",
+    "batteryLater": "Nanti saja",
+    "commonToday": "HARI INI",
+    "commonYesterday": "KEMARIN",
+    "statusActive": "AKTIF",
+    "statusIdle": "IDLE",
+    "statusOnline": "TERSAMBUNG",
+    "statusOffline": "TERPUTUS",
+    "navMine": "Klaim",
+    "navWallet": "Dompet",
+    "navProfile": "Profil",
+    "splashEnterSemantics": "Masuk ke konsol mining",
+    "splashEnter": "MASUK",
+    "mineNodeNotSet": "node belum diatur",
+    "mineCardLabel": "Celenium Miner",
+    "mineHashRate": "Laju hash",
+    "mineConnected": "connect",
+    "mineBridgeSilent": "Bridge belum menjawab. Atur alamatnya untuk mulai membaca angka langsung.",
+    "mineSetBridge": "Atur alamat bridge",
+    "mineNoInternalMiner": "MINER INTERNAL TIDAK TERSEDIA",
+    "mineMiningOn": "MINING AKTIF",
+    "mineMiningOff": "MINING BERHENTI",
+    "mineTapToStart": "Ketuk logo untuk mulai",
+    "mineTapToStop": "Ketuk logo untuk berhenti",
+    "mineRestartHint": "Ketuk logo untuk mulai sesi baru",
+    "mineToggleSemantics": "Mulai atau hentikan mining",
+    "mineWaitingShare": "> menunggu share pertama",
+    "mineShareAccepted": "> share diterima {hash}",
+    "@mineShareAccepted": {
+        "placeholders": {
+            "hash": {
+                "type": "String",
+                "example": "abc123de…ef4567"
+            }
+        }
+    },
+    "mineAcceptanceSemantics": "Rasio share diterima. Buka worker.",
+    "mineAcceptanceRate": "PENERIMAAN\n{rate}%",
+    "@mineAcceptanceRate": {
+        "placeholders": {
+            "rate": {
+                "type": "String",
+                "example": "98"
+            }
+        }
+    },
+    "mineSessionLabel": "sesi",
+    "mineTotalLabel": "total",
+    "mineSharesUnit": "share",
+    "mineAcceptedLabel": "diterima",
+    "mineRejectedLabel": "ditolak",
+    "mineActiveTime": "Waktu aktif",
+    "mineStatus": "Status",
+    "mineConnecting": "MENGHUBUNGKAN",
+    "mineNeedsWallet": "RESTART UNTUK BUAT DOMPET",
+    "mineLimitReached": "BATAS 24 JAM TERCAPAI",
+    "mineError": "MINER GALAT",
+    "mineAcceptedCount": "DITERIMA {count}",
+    "@mineAcceptedCount": {
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "example": "7"
+            }
+        }
+    },
+    "mineNoBlock": "belum ada blok diterima",
+    "mineBlockAccepted": "blok diterima {hash}",
+    "@mineBlockAccepted": {
+        "placeholders": {
+            "hash": {
+                "type": "String",
+                "example": "abc123de…ef4567"
+            }
+        }
+    },
+    "walletTitle": "Dompet",
+    "walletTransactions": "Transaksi",
+    "walletSeeAll": "LIHAT SEMUA",
+    "walletNoTxReason": "Belum ada transaksi. Koin yang masuk atau terkirim akan muncul di sini.",
+    "walletTotalBalance": "Saldo total",
+    "walletNoBalanceNote": "Saldo muncul setelah bridge terhubung ke node yang tersinkron.",
+    "walletMiningAddress": "Alamat mining",
+    "walletAddressCopied": "Alamat disalin",
+    "walletCopyAddress": "Salin alamat",
+    "walletShowAddress": "Tampilkan alamat",
+    "walletHideAddress": "Sembunyikan alamat",
+    "walletShowBalance": "Tampilkan saldo",
+    "walletHideBalance": "Sembunyikan saldo",
+    "walletSend": "Kirim",
+    "walletReceive": "Terima",
+    "walletSwap": "Tukar",
+    "walletBackupWords": "Cadangkan kata pemulihan",
+    "walletSwapSoon": "SEGERA HADIR",
+    "walletSwapUnavailable": "Tukar belum tersedia",
+    "walletSwapBody": "CEN belum terdaftar di bursa mana pun, jadi belum ada yang bisa ditukar.",
+    "walletReceiveNote": "Siapa pun yang punya alamat ini bisa mengirim koin ke sana. Aman untuk dibagikan.",
+    "walletMiningReward": "Imbalan mining",
+    "walletCoinIn": "Coin masuk",
+    "walletCoinOut": "Coin terkirim",
+    "walletSendTitle": "Kirim CEN",
+    "walletSendRecipient": "Alamat tujuan",
+    "walletSendAmount": "Jumlah",
+    "walletSendFee": "Biaya jaringan",
+    "walletSendConfirm": "Kirim",
+    "walletSendSending": "Mengirim…",
+    "walletSendNeedRecipient": "Masukkan alamat tujuan.",
+    "walletSendInvalidAmount": "Masukkan jumlah yang valid (maksimal 8 angka desimal).",
+    "walletSendBelowFee": "Jumlah lebih kecil dari biaya jaringan",
+    "walletSendNoKey": "Belum ada kata pemulihan di perangkat ini. Buat cadangannya dulu.",
+    "walletSendKeyMismatch": "Kata pemulihan di perangkat ini bukan pemilik alamat mining tersebut. Impor kata yang sesuai dulu.",
+    "walletSendFailed": "Node menolak transaksi ini.",
+    "walletSendSuccess": "Transaksi terkirim",
+    "walletSendSuccessBody": "Transaksi kini di mempool dan masuk ke chain begitu ada blok yang memuatnya.",
+    "walletSendTxId": "ID transaksi",
+    "walletSendNoAddress": "Belum ada alamat wallet",
+    "walletSendNoAddressBody": "Alamat muncul setelah bridge menambang blok pertama. Sebelum itu belum ada yang bisa dikirim.",
+    "walletSendNodeDown": "Node tidak terjangkau",
+    "walletSendNodeDownBody": "Wallet terhubung ke node lewat bridge. Buka tab Miner dan sambungkan node dulu.",
+    "backupTitle": "PEMULIHAN",
+    "backupImportError": "Frasa itu bukan frasa BIP39 yang valid. Periksa kata-katanya lalu coba lagi.",
+    "backupImported": "Terimpor {address}",
+    "@backupImported": {
+        "placeholders": {
+            "address": {
+                "type": "String",
+                "example": "cen69sim:qabc"
+            }
+        }
+    },
+    "backupRecoveryWords": "Kata pemulihan",
+    "backupIntro": "Dua belas kata yang membangun ulang kunci kamu di perangkat mana pun.",
+    "backupWhyTitle": "Kenapa ini penting",
+    "backupWhyBody": "Koin kamu berada di blockchain, terikat pada sebuah alamat. Koin itu tetap ada walau aplikasi dihapus. Yang tidak ikut tersimpan adalah kunci alamat tersebut, dan dua belas kata inilah kuncinya.",
+    "backupHowTitle": "Yang harus dilakukan",
+    "backupHowBody": "Tulis di kertas sesuai urutan, lalu simpan kertasnya di tempat selain ponsel ini. Jangan simpan di aplikasi catatan, tangkapan layar, atau pesan ke diri sendiri.",
+    "backupCreating": "Membuat…",
+    "backupCreateWords": "Buat kata pemulihan",
+    "backupHaveWords": "Saya sudah punya kata",
+    "backupWriteNow": "Tulis sekarang",
+    "backupWarningBody": "Siapa pun yang membaca dua belas kata ini bisa memindahkan semua koin di alamat kamu. Kata-kata ini hanya ditampilkan sekali. Setelah kamu keluar dari layar ini, kata-kata itu tidak tampil lagi.",
+    "backupWordsTitle": "12 kata kamu, sesuai urutan",
+    "backupWrittenCheck": "Saya sudah menulis kedua belas kata sesuai urutan",
+    "backupNotYet": "Belum dicadangkan",
+    "backupNotYetBody": "Kata pemulihan sudah ada di perangkat ini tapi belum dikonfirmasi tertulis. Selama belum, kehilangan ponsel ini berarti kehilangan kuncinya.",
+    "backupShowWords": "Tampilkan kata saya",
+    "backupDone": "Sudah dicadangkan",
+    "backupDoneBody": "Kata pemulihan kamu sudah dikonfirmasi tertulis. Simpan kertasnya di tempat selain ponsel ini.",
+    "backupIfDeletedTitle": "Kalau aplikasi dihapus",
+    "backupIfDeletedBody": "Koin tidak hilang: koin tetap di blockchain pada alamat kamu. Pasang ulang aplikasinya, pilih \"Saya sudah punya kata\", lalu masukkan kedua belas kata untuk mengambil alih alamat itu lagi.",
+    "backupShowAgain": "Tampilkan kata lagi",
+    "backupImportTitle": "Impor kata",
+    "backupImportIntro": "Masukkan 12 atau 24 kata yang sudah kamu punya untuk mengambil alih alamat itu di perangkat ini.",
+    "bridgeTitle": "BRIDGE",
+    "bridgeSaved": "Alamat bridge disimpan",
+    "bridgeAddress": "Alamat bridge",
+    "bridgeAddressNote": "Bridge menyajikan hasil mining lewat HTTP. Tidak ada akun dan tidak ada kredensial yang ikut dikirim.",
+    "bridgePollInterval": "Interval polling",
+    "bridgePollNote": "Seberapa sering aplikasi meminta angka baru ke bridge. Interval lebih pendek membuat tampilan lebih cepat berubah dan lebih boros baterai.",
+    "bridgeNode": "Node",
+    "bridgeInfoAddress": "Alamat",
+    "bridgeInfoVersion": "Versi",
+    "bridgeInfoInstances": "Instans",
+    "workersTitle": "WORKER",
+    "workersEmpty": "Belum ada worker yang melapor. Arahkan miner ke port stratum bridge dengan alamat CEN kamu sebagai nama worker, maka worker itu muncul di sini.",
+    "workersHashRate": "laju hash",
+    "workersBlocks": "blok",
+    "workersStaleInvalid": "{stale} usang · {invalid} tidak valid",
+    "@workersStaleInvalid": {
+        "placeholders": {
+            "stale": {
+                "type": "int",
+                "example": "1"
+            },
+            "invalid": {
+                "type": "int",
+                "example": "0"
+            }
+        }
+    },
+    "workersSession": "sesi {duration}",
+    "@workersSession": {
+        "placeholders": {
+            "duration": {
+                "type": "String",
+                "example": "1h 20m"
+            }
+        }
+    },
+    "logTitle": "AKTIVITAS",
+    "logEmpty": "Belum ada catatan. Perubahan koneksi dan blok yang baru diterima dicatat di sini saat terjadi.",
+    "logBridgeReachable": "Bridge terhubung di {address}",
+    "@logBridgeReachable": {
+        "placeholders": {
+            "address": {
+                "type": "String",
+                "example": "0.0.0.0:3030"
+            }
+        }
+    },
+    "logBridgeUnreachable": "Bridge tidak terhubung",
+    "logBlockAccepted": "Blok diterima ({newCount} baru, {total} total)",
+    "@logBlockAccepted": {
+        "placeholders": {
+            "newCount": {
+                "type": "int",
+                "example": "1"
+            },
+            "total": {
+                "type": "int",
+                "example": "3"
+            }
+        }
+    },
+    "logMinerStarted": "CPU miner internal mulai jalan",
+    "logMinerStopped": "CPU miner internal berhenti",
+    "logMinerToggleFailed": "Gagal mengubah status mining — bridge tidak merespons",
+    "logStaleShares": "{count} share usang dilaporkan",
+    "@logStaleShares": {
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "example": "2"
+            }
+        }
+    },
+    "logPollFailed": "Polling gagal",
+    "logAdRequestFailed": "Permintaan iklan gagal",
+    "profileTitle": "Profil",
+    "profileSettings": "Pengaturan",
+    "profileNotSet": "belum diatur",
+    "profileBridgeRow": "Bridge",
+    "profileWorkersRow": "Worker",
+    "profileActivityRow": "Log aktivitas",
+    "profileRecoveryRow": "Kata pemulihan",
+    "profileAboutRow": "Tentang",
+    "profileDeviceUnknown": "IP/ID perangkat belum terbaca",
+    "profileLanguage": "Bahasa",
+    "profileLanguageSystem": "Ikuti sistem",
+    "profileLanguageDone": "Bahasa disimpan",
+    "aboutTitle": "TENTANG",
+    "aboutWhatTitle": "Fungsi aplikasi ini",
+    "aboutWhatBody": "Aplikasi ini membaca hasil mining dari sebuah bridge Celenium dan menampilkannya di ponsel kamu. Tidak ada akun, basis data, maupun koin yang disimpan di sini: hasilnya berada di blockchain dan di bridge, dan aplikasi ini hanya jendela untuk melihatnya.",
+    "aboutVersion": "Versi",
+    "aboutCreatedBy": "Dibuat oleh",
+    "faucetTitle": "Rewards partisipasi",
+    "faucetClaim": "Klaim bertahap",
+    "faucetClaiming": "Mengklaim…",
+    "faucetClaimed": "+{count} pradha diklaim",
+    "@faucetClaimed": {
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "example": "1000"
+            }
+        }
+    },
+    "faucetClaimFailed": "Klaim gagal",
+    "faucetAlreadyClaimed": "Belum ada yang terakru — reward menetes bertahap selama 24 jam",
+    "faucetInfo": "Reward yang bisa diklaim bertambah bertahap selama 24 jam ke saldo off-chain ini; saldo dipakai saat tarik/kirim dari faucet. Biaya jaringan dibayar faucet."
 }

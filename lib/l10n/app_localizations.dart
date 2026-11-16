@@ -167,7 +167,7 @@ abstract class AppLocalizations {
   /// No description provided for @batteryBody.
   ///
   /// In en, this message translates to:
-  /// **'Android can stop mining while the screen is off. Exempt Celenium Miner from battery optimisation so the 12-hour session is not cut short.'**
+  /// **'Android can stop mining while the screen is off. Exempt Celenium Miner from battery optimisation so the 24-hour session is not cut short.'**
   String get batteryBody;
 
   /// No description provided for @batteryOpen.
@@ -221,7 +221,7 @@ abstract class AppLocalizations {
   /// No description provided for @navMine.
   ///
   /// In en, this message translates to:
-  /// **'Mine'**
+  /// **'Claim'**
   String get navMine;
 
   /// No description provided for @navWallet.
@@ -407,7 +407,7 @@ abstract class AppLocalizations {
   /// No description provided for @mineLimitReached.
   ///
   /// In en, this message translates to:
-  /// **'12H LIMIT REACHED'**
+  /// **'24H LIMIT REACHED'**
   String get mineLimitReached;
 
   /// No description provided for @mineError.

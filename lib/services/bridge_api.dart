@@ -94,7 +94,7 @@ class BridgeApi {
     return FaucetBalance.tryParse(body);
   }
 
-  /// `POST /api/faucet/claim` — claim the daily participation reward.
+  /// `POST /api/faucet/claim` — claim the accrued part of today's reward.
   ///
   /// [deviceId] is the Android ID: the faucet caps how many distinct wallets a
   /// single device may register (anti-sybil). It is sent raw, never stored.

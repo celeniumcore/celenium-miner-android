@@ -1141,9 +1141,10 @@ void main() {
       await pumpFrames(tester, 10);
 
       // The tab strip uppercases its captions, so the Indonesian names arrive
-      // as TAMBANG / DOMPET / PROFIL. The English set has to be gone.
-      expect(find.text('TAMBANG'), findsWidgets);
-      expect(find.text('MINE'), findsNothing);
+      // as KLAIM / DOMPET / PROFIL. The English set has to be gone.
+      expect(find.text('KLAIM'), findsWidgets);
+      expect(find.text('DOMPET'), findsWidgets);
+      expect(find.text('CLAIM'), findsNothing);
       expect(find.text('WALLET'), findsNothing);
     });
 

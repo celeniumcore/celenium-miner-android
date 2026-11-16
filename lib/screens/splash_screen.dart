@@ -11,10 +11,8 @@ import '../widgets/hacker_fx.dart';
 
 /// Boot screen.
 ///
-/// Shows the wordmark, the brand emblem, and a short machine readout. The
-/// readout carries real values (network, node version, block height) when the
-/// bridge has answered, and stays blank when it has not, so the screen never
-/// claims a connection it does not have.
+/// Shows the Celenium wordmark and emblem over full-screen binary rain, with
+/// an entry control anchored at the bottom.
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key, required this.onDone});
 
@@ -59,55 +57,81 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Palette.field,
-      body: SafeArea(
-        child: Stack(
+    final media = MediaQuery.of(context);
+    final inset = media.viewPadding;
+
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+        systemNavigationBarColor: Colors.transparent,
+        systemNavigationBarIconBrightness: Brightness.light,
+        systemNavigationBarDividerColor: Colors.transparent,
+      ),
+      child: Scaffold(
+        backgroundColor: Palette.field,
+        body: Stack(
+          fit: StackFit.expand,
           children: [
-            // Rain first (bottom layer): the whole screen is a quiet terminal
-            // texture, and every reading on top of it stays legible.
+            // Rain fills the display including the strips behind the system
+            // bars; the terminal texture is the background of the screen, not
+            // of a padded box, so a device with tall insets still reads full.
             const Positioned.fill(child: _BinaryRain(running: true)),
-            // CRT scanlines over the rain, still behind the content.
             Positioned.fill(child: ScanlineOverlay(opacity: 0.32, spacing: 2)),
-            // Content pinned to the top: the emblem sits right under the
-            // wordmark, and the boot text reads top-down like a console.
-            SingleChildScrollView(
+            // One column spanning the full height: wordmark anchored at the
+            // top, emblem centred in the space between, entry pinned above the
+            // gesture inset. Insets are padding so nothing sits under a system
+            // bar, and the emblem's Expanded slot absorbs the leftover height.
+            Padding(
+              padding: EdgeInsets.fromLTRB(
+                Palette.xl,
+                inset.top + Palette.xxl,
+                Palette.xl,
+                inset.bottom + Palette.xl,
+              ),
               child: Center(
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 520),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(
-                      Palette.xl,
-                      Palette.xxl,
-                      Palette.xl,
-                      Palette.lg,
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        GlitchText(
-                          text: 'CELENIUM',
-                          style: TypeScale.wordmark(context),
+                  child: LayoutBuilder(
+                    builder: (context, inner) {
+                      if (inner.maxHeight >= 520) {
+                        return Column(
+                          children: [
+                            _Wordmark(style: TypeScale.wordmark(context)),
+                            Expanded(
+                              child: Center(
+                                child: _EmblemBlock(progress: _controller),
+                              ),
+                            ),
+                            _EnterButton(
+                              onTap: () {
+                                HapticFeedback.mediumImpact();
+                                widget.onDone();
+                              },
+                              fade: _entry,
+                            ),
+                          ],
+                        );
+                      }
+                      // Short viewports cannot distribute; stack and scroll.
+                      return SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            _Wordmark(style: TypeScale.wordmark(context)),
+                            const SizedBox(height: Palette.xxl),
+                            _EmblemBlock(progress: _controller),
+                            const SizedBox(height: Palette.xxl),
+                            _EnterButton(
+                              onTap: () {
+                                HapticFeedback.mediumImpact();
+                                widget.onDone();
+                              },
+                              fade: _entry,
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: Palette.sm),
-                        Text(
-                          'C E L E N I U M   C O R E',
-                          style: TypeScale.monoMuted(context, size: 9),
-                        ),
-                        const SizedBox(height: Palette.xl),
-                        _Emblem(progress: _controller),
-                        const SizedBox(height: Palette.md),
-                        const _TickerGlitch(text: 'C . E . N'),
-                        const SizedBox(height: Palette.lg),
-                        _EnterButton(
-                          onTap: () {
-                            HapticFeedback.mediumImpact();
-                            widget.onDone();
-                          },
-                          fade: _entry,
-                        ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
                 ),
               ),
@@ -115,6 +139,51 @@ class _SplashScreenState extends State<SplashScreen>
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Wordmark plus the small mono line under it.
+class _Wordmark extends StatelessWidget {
+  const _Wordmark({required this.style});
+
+  final TextStyle style;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        GlitchText(text: 'CELENIUM', style: style),
+        const SizedBox(height: Palette.sm),
+        Text(
+          'C E L E N I U M   C O R E',
+          style: TypeScale.monoMuted(context, size: 9),
+        ),
+      ],
+    );
+  }
+}
+
+/// Emblem with its ticker, sized to grow on tall screens so the middle of the
+/// display carries weight instead of leaving a void above the entry button.
+class _EmblemBlock extends StatelessWidget {
+  const _EmblemBlock({required this.progress});
+
+  final Animation<double> progress;
+
+  @override
+  Widget build(BuildContext context) {
+    final available = MediaQuery.sizeOf(context).height;
+    final size = (available * 0.20).clamp(132.0, 210.0);
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        _Emblem(progress: progress, size: size),
+        const SizedBox(height: Palette.md),
+        const _TickerGlitch(text: 'C . E . N'),
+      ],
     );
   }
 }
@@ -267,12 +336,7 @@ class _BinaryRain extends StatelessWidget {
   Widget build(BuildContext context) {
     // Sparse and small-print so it reads as texture rather than as text:
     // enough columns to fill the width, loose spacing, small glyphs.
-    return BinaryRain(
-      running: running,
-      expand: true,
-      fontSize: 9,
-      columns: 28,
-    );
+    return BinaryRain(running: running, expand: true, fontSize: 9, columns: 28);
   }
 }
 
@@ -282,9 +346,10 @@ class _BinaryRain extends StatelessWidget {
 /// what it found rather than as a static label.
 /// Cream disc with the navy flower inside, and a gold arc that sweeps once.
 class _Emblem extends StatelessWidget {
-  const _Emblem({required this.progress});
+  const _Emblem({required this.progress, required this.size});
 
   final Animation<double> progress;
+  final double size;
 
   @override
   Widget build(BuildContext context) {
@@ -292,18 +357,20 @@ class _Emblem extends StatelessWidget {
       animation: progress,
       builder: (context, _) {
         return SizedBox.square(
-          dimension: 132,
+          dimension: size,
           child: CustomPaint(
             painter: _EmblemPainter(sweep: progress.value),
             child: Center(
               child: Container(
-                width: 96,
-                height: 96,
+                width: size * 0.73,
+                height: size * 0.73,
                 decoration: const BoxDecoration(
                   color: Palette.surfaceHigh,
                   shape: BoxShape.circle,
                 ),
-                child: Center(child: BrandMark(size: 58, onDark: true)),
+                child: Center(
+                  child: BrandMark(size: size * 0.44, onDark: true),
+                ),
               ),
             ),
           ),
