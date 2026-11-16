@@ -1140,10 +1140,10 @@ void main() {
       await tester.tap(find.text('MASUK'));
       await pumpFrames(tester, 10);
 
-      // The tab strip uppercases its captions, so the Indonesian names arrive
-      // as TAMBANG / DOMPET / PROFIL. The English set has to be gone.
-      expect(find.text('TAMBANG'), findsWidgets);
-      expect(find.text('MINE'), findsNothing);
+      // The tab strip uppercases the localized navigation labels.
+      expect(find.text('KLAIM'), findsWidgets);
+      expect(find.text('DOMPET'), findsWidgets);
+      expect(find.text('CLAIM'), findsNothing);
       expect(find.text('WALLET'), findsNothing);
     });
 
