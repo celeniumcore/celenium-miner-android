@@ -221,7 +221,7 @@ abstract class AppLocalizations {
   /// No description provided for @navMine.
   ///
   /// In en, this message translates to:
-  /// **'Mine'**
+  /// **'Claim'**
   String get navMine;
 
   /// No description provided for @navWallet.
@@ -1121,7 +1121,7 @@ abstract class AppLocalizations {
   /// No description provided for @faucetClaim.
   ///
   /// In en, this message translates to:
-  /// **'Claim daily'**
+  /// **'Claim accrued'**
   String get faucetClaim;
 
   /// No description provided for @faucetClaiming.
@@ -1139,14 +1139,242 @@ abstract class AppLocalizations {
   /// No description provided for @faucetClaimFailed.
   ///
   /// In en, this message translates to:
-  /// **'Claim failed'**
+  /// **'Claim failed. Refresh the balance before trying again.'**
   String get faucetClaimFailed;
 
   /// No description provided for @faucetAlreadyClaimed.
   ///
   /// In en, this message translates to:
-  /// **'Already claimed today'**
+  /// **'Nothing accrued yet. Rewards build up over 24 hours.'**
   String get faucetAlreadyClaimed;
+
+  /// No description provided for @faucetInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Claims credit your off-chain balance. Withdraw to your wallet to move it on-chain, minimum 1000 pradha. The faucet pays network fees. Withdrawals are 1 hour apart. Rewards accrue from 00:00 UTC.'**
+  String get faucetInfo;
+
+  /// No description provided for @faucetBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Off-chain balance: {count} pradha'**
+  String faucetBalance(int count);
+
+  /// No description provided for @faucetReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to claim: {count} pradha'**
+  String faucetReady(int count);
+
+  /// No description provided for @faucetQuota.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily quota: {count} pradha'**
+  String faucetQuota(int count);
+
+  /// No description provided for @faucetClaimedToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Claimed today: {count} pradha'**
+  String faucetClaimedToday(int count);
+
+  /// No description provided for @faucetLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading faucet balance…'**
+  String get faucetLoading;
+
+  /// No description provided for @faucetLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not refresh the faucet balance. Try again.'**
+  String get faucetLoadFailed;
+
+  /// No description provided for @faucetRefresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh faucet'**
+  String get faucetRefresh;
+
+  /// No description provided for @faucetUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect a bridge to load participation rewards.'**
+  String get faucetUnavailable;
+
+  /// No description provided for @faucetNotEligible.
+  ///
+  /// In en, this message translates to:
+  /// **'No claim available. The balance refreshes automatically.'**
+  String get faucetNotEligible;
+
+  /// No description provided for @faucetDailyCap.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily limit reached. Check again after 00:00 UTC.'**
+  String get faucetDailyCap;
+
+  /// No description provided for @faucetReservoirFull.
+  ///
+  /// In en, this message translates to:
+  /// **'Faucet balance is full. Withdraw before claiming again.'**
+  String get faucetReservoirFull;
+
+  /// No description provided for @faucetInvalidAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'The bridge rejected this wallet address.'**
+  String get faucetInvalidAddress;
+
+  /// No description provided for @faucetStorageUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Faucet is temporarily unavailable. Refresh the balance; contact the operator if this continues.'**
+  String get faucetStorageUnavailable;
+
+  /// No description provided for @faucetWithdraw.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdraw to wallet'**
+  String get faucetWithdraw;
+
+  /// No description provided for @faucetWithdrawing.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdrawing…'**
+  String get faucetWithdrawing;
+
+  /// No description provided for @faucetWithdrawConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdraw {count} pradha to this address? The faucet pays the fee. Wait for blockchain confirmation before spending.'**
+  String faucetWithdrawConfirm(int count);
+
+  /// No description provided for @faucetConfirmWithdraw.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm withdrawal'**
+  String get faucetConfirmWithdraw;
+
+  /// No description provided for @faucetCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get faucetCancel;
+
+  /// No description provided for @faucetClose.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get faucetClose;
+
+  /// No description provided for @faucetWithdrawSubmitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdrawal submitted'**
+  String get faucetWithdrawSubmitted;
+
+  /// No description provided for @faucetWithdrawAccepted.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} pradha submitted to your wallet. Network fee: {fee} pradha, paid by the faucet. Await blockchain confirmation.'**
+  String faucetWithdrawAccepted(int amount, int fee);
+
+  /// No description provided for @faucetWithdrawReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdrawal needs review'**
+  String get faucetWithdrawReview;
+
+  /// No description provided for @faucetWithdrawUncertain.
+  ///
+  /// In en, this message translates to:
+  /// **'The node accepted a transaction, but the faucet ledger needs recovery. Do not withdraw again. Contact the operator with this TXID and check your wallet.'**
+  String get faucetWithdrawUncertain;
+
+  /// No description provided for @faucetWithdrawFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdrawal failed'**
+  String get faucetWithdrawFailed;
+
+  /// No description provided for @faucetUnfunded.
+  ///
+  /// In en, this message translates to:
+  /// **'The faucet has no on-chain funds yet. Your reward balance is unchanged. Contact the operator.'**
+  String get faucetUnfunded;
+
+  /// No description provided for @faucetWithdrawNotConfigured.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdrawals are not configured. Contact the operator.'**
+  String get faucetWithdrawNotConfigured;
+
+  /// No description provided for @faucetWithdrawCooldown.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdrawals are 1 hour apart. Wait before trying again.'**
+  String get faucetWithdrawCooldown;
+
+  /// No description provided for @faucetWithdrawWait.
+  ///
+  /// In en, this message translates to:
+  /// **'Wait {seconds} seconds before withdrawing again.'**
+  String faucetWithdrawWait(int seconds);
+
+  /// No description provided for @faucetWithdrawMinimum.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdrawals require at least {count} pradha.'**
+  String faucetWithdrawMinimum(int count);
+
+  /// No description provided for @faucetWithdrawFeeBudget.
+  ///
+  /// In en, this message translates to:
+  /// **'The daily network fee budget is exhausted. Try again after 00:00 UTC.'**
+  String get faucetWithdrawFeeBudget;
+
+  /// No description provided for @faucetWithdrawRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh the balance and try again. Contact the operator if withdrawal keeps failing.'**
+  String get faucetWithdrawRetry;
+
+  /// No description provided for @faucetWithdrawNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdrawal status is unknown. Check your wallet and refresh the faucet before retrying.'**
+  String get faucetWithdrawNetwork;
+
+  /// No description provided for @faucetActivate.
+  ///
+  /// In en, this message translates to:
+  /// **'Activate rewards'**
+  String get faucetActivate;
+
+  /// No description provided for @faucetActivated.
+  ///
+  /// In en, this message translates to:
+  /// **'Rewards activated. They will accrue over time.'**
+  String get faucetActivated;
+
+  /// No description provided for @faucetActivationInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Activate today\'s reward. It becomes claimable after 00:00 UTC.'**
+  String get faucetActivationInfo;
+
+  /// No description provided for @faucetPendingPrevious.
+  ///
+  /// In en, this message translates to:
+  /// **'From previous days: {count} pradha'**
+  String faucetPendingPrevious(int count);
+
+  /// No description provided for @faucetLegacyReady.
+  ///
+  /// In en, this message translates to:
+  /// **'A claim is available. The bridge will confirm the amount.'**
+  String get faucetLegacyReady;
 }
 
 class _AppLocalizationsDelegate

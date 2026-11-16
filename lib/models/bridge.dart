@@ -211,18 +211,18 @@ class BridgeStats {
   /// A copy with [miningEnabled] overridden, used to reflect a confirmed
   /// start/stop without waiting for the next poll.
   BridgeStats withMiningEnabled(bool enabled) => BridgeStats(
-        totalBlocks: totalBlocks,
-        totalShares: totalShares,
-        networkHashrate: networkHashrate,
-        networkDifficulty: networkDifficulty,
-        networkBlockCount: networkBlockCount,
-        activeWorkers: activeWorkers,
-        internalCpu: internalCpu,
-        miningEnabled: enabled,
-        blocks: blocks,
-        workers: workers,
-        bridgeUptime: bridgeUptime,
-      );
+    totalBlocks: totalBlocks,
+    totalShares: totalShares,
+    networkHashrate: networkHashrate,
+    networkDifficulty: networkDifficulty,
+    networkBlockCount: networkBlockCount,
+    activeWorkers: activeWorkers,
+    internalCpu: internalCpu,
+    miningEnabled: enabled,
+    blocks: blocks,
+    workers: workers,
+    bridgeUptime: bridgeUptime,
+  );
 }
 
 /// A snapshot of everything the app shows, fetched together.
@@ -255,10 +255,8 @@ class MinerSnapshot {
 
   /// A copy with only the mining switch state changed, so a confirmed start or
   /// stop can update the UI without discarding the rest of the snapshot.
-  MinerSnapshot withMiningEnabled(bool enabled) => MinerSnapshot(
-        status: status,
-        stats: stats?.withMiningEnabled(enabled),
-      );
+  MinerSnapshot withMiningEnabled(bool enabled) =>
+      MinerSnapshot(status: status, stats: stats?.withMiningEnabled(enabled));
 }
 
 /// `GET /api/mining` and `POST /api/mining` — the bridge's runtime mining
@@ -308,7 +306,10 @@ class AccountBalance {
     if (json.containsKey('error')) return null;
     final pradha = (json['balancePradha'] as num?)?.toInt();
     if (pradha == null) return null;
-    return AccountBalance(address: json['address'] as String? ?? '', pradha: pradha);
+    return AccountBalance(
+      address: json['address'] as String? ?? '',
+      pradha: pradha,
+    );
   }
 }
 
@@ -334,65 +335,203 @@ class SendResult {
   }
 }
 
-/// `GET /api/faucet/balance` — the off-chain faucet participation balance.
-///
-/// Claimed rewards accrue here until an on-chain withdrawal; the faucet is a
-/// participation signal, not mining (see `docs/faucet-reservoir-spec.md`).
+/// Off-chain participation balance, separate from the wallet's on-chain funds.
 class FaucetBalance {
   final int balancePradha;
   final int totalClaimedPradha;
   final bool canClaimToday;
 
+  /// Server-authoritative claimable delta; null on older bridges.
+  final int? rewardPradha;
+  final int? dailyRewardPradha;
+  final int? claimedTodayPradha;
+  final int? accruedTodayPradha;
+  final int? serverTimeSecs;
+  final int? dripDurationSecs;
+  final bool? canStartDrip;
+  final int? pendingPreviousPradha;
+
   const FaucetBalance({
     required this.balancePradha,
     required this.totalClaimedPradha,
     required this.canClaimToday,
+    this.rewardPradha,
+    this.dailyRewardPradha,
+    this.claimedTodayPradha,
+    this.accruedTodayPradha,
+    this.serverTimeSecs,
+    this.dripDurationSecs,
+    this.canStartDrip,
+    this.pendingPreviousPradha,
   });
 
-  /// `null` when the bridge is not ready or the body is not the expected shape.
   static FaucetBalance? tryParse(Object? json) {
-    if (json is! Map<String, dynamic>) return null;
-    if (json.containsKey('error')) return null;
-    final balance = json['balancePradha'];
-    final total = json['totalClaimedPradha'];
+    if (json is! Map<String, dynamic> || json.containsKey('error')) return null;
+    final balance = _faucetInt(json['balancePradha']);
+    final total = _faucetInt(json['totalClaimedPradha']);
     final can = json['canClaimToday'];
-    if (balance is! num || total is! num || can is! bool) return null;
+    if (balance == null || total == null || can is! bool) return null;
+    if (json['canStartDrip'] != null && json['canStartDrip'] is! bool) {
+      return null;
+    }
+    if (!_validOptionalFaucetInts(json, const [
+      'rewardPradha',
+      'dailyRewardPradha',
+      'claimedTodayPradha',
+      'accruedTodayPradha',
+      'serverTimeSecs',
+      'dripDurationSecs',
+      'pendingPreviousPradha',
+    ])) {
+      return null;
+    }
     return FaucetBalance(
-      balancePradha: balance.toInt(),
-      totalClaimedPradha: total.toInt(),
+      balancePradha: balance,
+      totalClaimedPradha: total,
       canClaimToday: can,
+      rewardPradha: _faucetInt(json['rewardPradha']),
+      dailyRewardPradha: _faucetInt(json['dailyRewardPradha']),
+      claimedTodayPradha: _faucetInt(json['claimedTodayPradha']),
+      accruedTodayPradha: _faucetInt(json['accruedTodayPradha']),
+      serverTimeSecs: _faucetInt(json['serverTimeSecs']),
+      dripDurationSecs: _faucetInt(json['dripDurationSecs']),
+      canStartDrip: json['canStartDrip'] as bool?,
+      pendingPreviousPradha: _faucetInt(json['pendingPreviousPradha']),
     );
   }
 }
 
-/// `POST /api/faucet/claim` — either the credited balance or the bridge's error
-/// text (already claimed today / daily cap / empty address).
+/// A credited claim delta or a bridge error, including its optional stable code.
 class FaucetClaimResult {
   final int balancePradha;
   final int rewardPradha;
+  final int? dailyRewardPradha;
+  final int? claimedTodayPradha;
   final String? error;
+  final String? errorCode;
+  final bool? startedDrip;
 
   const FaucetClaimResult.success({
     required this.balancePradha,
     required this.rewardPradha,
-  }) : error = null;
+    this.dailyRewardPradha,
+    this.claimedTodayPradha,
+    this.startedDrip,
+  }) : error = null,
+       errorCode = null;
 
-  const FaucetClaimResult.failure({required String this.error})
-      : balancePradha = 0,
-        rewardPradha = 0;
+  const FaucetClaimResult.failure({required String this.error, this.errorCode})
+    : balancePradha = 0,
+      rewardPradha = 0,
+      dailyRewardPradha = null,
+      claimedTodayPradha = null,
+      startedDrip = null;
 
   bool get ok => error == null;
 
   static FaucetClaimResult? tryParse(Object? json) {
     if (json is! Map<String, dynamic>) return null;
     final error = json['error'];
-    if (error is String) return FaucetClaimResult.failure(error: error);
-    final balance = json['balancePradha'];
-    final reward = json['rewardPradha'];
-    if (json['ok'] != true || balance is! num || reward is! num) return null;
+    if (error is String) {
+      return FaucetClaimResult.failure(
+        error: error,
+        errorCode: json['errorCode'] is String
+            ? json['errorCode'] as String
+            : null,
+      );
+    }
+    final balance = _faucetInt(json['balancePradha']);
+    final reward = _faucetInt(json['rewardPradha']);
+    if (json['ok'] != true || balance == null || reward == null) return null;
+    if (json['startedDrip'] != null && json['startedDrip'] is! bool) {
+      return null;
+    }
+    if (!_validOptionalFaucetInts(json, const [
+      'dailyRewardPradha',
+      'claimedTodayPradha',
+    ])) {
+      return null;
+    }
     return FaucetClaimResult.success(
-      balancePradha: balance.toInt(),
-      rewardPradha: reward.toInt(),
+      balancePradha: balance,
+      rewardPradha: reward,
+      dailyRewardPradha: _faucetInt(json['dailyRewardPradha']),
+      claimedTodayPradha: _faucetInt(json['claimedTodayPradha']),
+      startedDrip: json['startedDrip'] as bool?,
     );
   }
 }
+
+/// Withdrawal acceptance is distinct from confirmation on the blockchain.
+class FaucetWithdrawResult {
+  final bool ok;
+  final String? txid;
+  final int? amountPradha;
+  final int? feePradha;
+  final int? balancePradha;
+  final String? error;
+  final String? errorCode;
+  final int? remainingSecs;
+  final int? minAmountPradha;
+
+  const FaucetWithdrawResult._({
+    required this.ok,
+    this.txid,
+    this.amountPradha,
+    this.feePradha,
+    this.balancePradha,
+    this.error,
+    this.errorCode,
+    this.remainingSecs,
+    this.minAmountPradha,
+  });
+
+  static FaucetWithdrawResult? tryParse(Object? json) {
+    if (json is! Map<String, dynamic>) return null;
+    final txid = json['txid'] is String && (json['txid'] as String).isNotEmpty
+        ? json['txid'] as String
+        : null;
+    final error = json['error'];
+    if (error is String) {
+      return FaucetWithdrawResult._(
+        ok: false,
+        error: error,
+        txid: txid,
+        errorCode: json['errorCode'] is String
+            ? json['errorCode'] as String
+            : null,
+        balancePradha: _faucetInt(json['balancePradha']),
+        remainingSecs: _faucetInt(json['remainingSecs']),
+        minAmountPradha: _faucetInt(json['minAmountPradha']),
+      );
+    }
+    final amount = _faucetInt(json['amountPradha']);
+    final fee = _faucetInt(json['feePradha']);
+    final balance = _faucetInt(json['balancePradha']);
+    if (json['ok'] != true ||
+        txid == null ||
+        amount == null ||
+        amount == 0 ||
+        fee == null ||
+        balance == null) {
+      return null;
+    }
+    return FaucetWithdrawResult._(
+      ok: true,
+      txid: txid,
+      amountPradha: amount,
+      feePradha: fee,
+      balancePradha: balance,
+    );
+  }
+}
+
+int? _faucetInt(Object? value) {
+  if (value is int) return value >= 0 ? value : null;
+  if (value is! double || !value.isFinite || value < 0) return null;
+  final integer = value.toInt();
+  return integer == value ? integer : null;
+}
+
+bool _validOptionalFaucetInts(Map<String, dynamic> json, List<String> keys) =>
+    keys.every((key) => json[key] == null || _faucetInt(json[key]) != null);

@@ -567,7 +567,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get faucetTitle => 'Participation rewards';
 
   @override
-  String get faucetClaim => 'Claim daily';
+  String get faucetClaim => 'Claim accrued';
 
   @override
   String get faucetClaiming => 'Claiming…';
@@ -578,8 +578,159 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get faucetClaimFailed => 'Claim failed';
+  String get faucetClaimFailed =>
+      'Claim failed. Refresh the balance before trying again.';
 
   @override
-  String get faucetAlreadyClaimed => 'Already claimed today';
+  String get faucetAlreadyClaimed =>
+      'Nothing accrued yet. Rewards build up over 24 hours.';
+
+  @override
+  String get faucetInfo =>
+      'Claims credit your off-chain balance. Withdraw to your wallet to move it on-chain, minimum 1000 pradha. The faucet pays network fees. Withdrawals are 1 hour apart. Rewards accrue from 00:00 UTC.';
+
+  @override
+  String faucetBalance(int count) {
+    return 'Off-chain balance: $count pradha';
+  }
+
+  @override
+  String faucetReady(int count) {
+    return 'Ready to claim: $count pradha';
+  }
+
+  @override
+  String faucetQuota(int count) {
+    return 'Daily quota: $count pradha';
+  }
+
+  @override
+  String faucetClaimedToday(int count) {
+    return 'Claimed today: $count pradha';
+  }
+
+  @override
+  String get faucetLoading => 'Loading faucet balance…';
+
+  @override
+  String get faucetLoadFailed =>
+      'Could not refresh the faucet balance. Try again.';
+
+  @override
+  String get faucetRefresh => 'Refresh faucet';
+
+  @override
+  String get faucetUnavailable =>
+      'Connect a bridge to load participation rewards.';
+
+  @override
+  String get faucetNotEligible =>
+      'No claim available. The balance refreshes automatically.';
+
+  @override
+  String get faucetDailyCap =>
+      'Daily limit reached. Check again after 00:00 UTC.';
+
+  @override
+  String get faucetReservoirFull =>
+      'Faucet balance is full. Withdraw before claiming again.';
+
+  @override
+  String get faucetInvalidAddress => 'The bridge rejected this wallet address.';
+
+  @override
+  String get faucetStorageUnavailable =>
+      'Faucet is temporarily unavailable. Refresh the balance; contact the operator if this continues.';
+
+  @override
+  String get faucetWithdraw => 'Withdraw to wallet';
+
+  @override
+  String get faucetWithdrawing => 'Withdrawing…';
+
+  @override
+  String faucetWithdrawConfirm(int count) {
+    return 'Withdraw $count pradha to this address? The faucet pays the fee. Wait for blockchain confirmation before spending.';
+  }
+
+  @override
+  String get faucetConfirmWithdraw => 'Confirm withdrawal';
+
+  @override
+  String get faucetCancel => 'Cancel';
+
+  @override
+  String get faucetClose => 'Close';
+
+  @override
+  String get faucetWithdrawSubmitted => 'Withdrawal submitted';
+
+  @override
+  String faucetWithdrawAccepted(int amount, int fee) {
+    return '$amount pradha submitted to your wallet. Network fee: $fee pradha, paid by the faucet. Await blockchain confirmation.';
+  }
+
+  @override
+  String get faucetWithdrawReview => 'Withdrawal needs review';
+
+  @override
+  String get faucetWithdrawUncertain =>
+      'The node accepted a transaction, but the faucet ledger needs recovery. Do not withdraw again. Contact the operator with this TXID and check your wallet.';
+
+  @override
+  String get faucetWithdrawFailed => 'Withdrawal failed';
+
+  @override
+  String get faucetUnfunded =>
+      'The faucet has no on-chain funds yet. Your reward balance is unchanged. Contact the operator.';
+
+  @override
+  String get faucetWithdrawNotConfigured =>
+      'Withdrawals are not configured. Contact the operator.';
+
+  @override
+  String get faucetWithdrawCooldown =>
+      'Withdrawals are 1 hour apart. Wait before trying again.';
+
+  @override
+  String faucetWithdrawWait(int seconds) {
+    return 'Wait $seconds seconds before withdrawing again.';
+  }
+
+  @override
+  String faucetWithdrawMinimum(int count) {
+    return 'Withdrawals require at least $count pradha.';
+  }
+
+  @override
+  String get faucetWithdrawFeeBudget =>
+      'The daily network fee budget is exhausted. Try again after 00:00 UTC.';
+
+  @override
+  String get faucetWithdrawRetry =>
+      'Refresh the balance and try again. Contact the operator if withdrawal keeps failing.';
+
+  @override
+  String get faucetWithdrawNetwork =>
+      'Withdrawal status is unknown. Check your wallet and refresh the faucet before retrying.';
+
+  @override
+  String get faucetActivate => 'Activate rewards';
+
+  @override
+  String get faucetActivated =>
+      'Rewards activated. They will accrue over time.';
+
+  @override
+  String get faucetActivationInfo =>
+      'Activate today\'s reward. It becomes claimable after 00:00 UTC.';
+
+  @override
+  String faucetPendingPrevious(int count) {
+    return 'From previous days: $count pradha';
+  }
+
+  @override
+  String get faucetLegacyReady =>
+      'A claim is available. The bridge will confirm the amount.';
 }
