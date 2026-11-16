@@ -258,7 +258,7 @@
   "aboutVersion": "Version",
   "aboutCreatedBy": "Created by",
   "faucetTitle": "Participation rewards",
-  "faucetClaim": "Claim daily",
+  "faucetClaim": "Claim accrued",
   "faucetClaiming": "Claiming…",
   "faucetClaimed": "Claimed +{count} pradha",
   "@faucetClaimed": {
@@ -269,6 +269,110 @@
       }
     }
   },
-  "faucetClaimFailed": "Claim failed",
-  "faucetAlreadyClaimed": "Already claimed today"
+  "faucetClaimFailed": "Claim failed. Refresh the balance before trying again.",
+  "faucetAlreadyClaimed": "Nothing accrued yet. Rewards build up over 24 hours.",
+  "faucetInfo": "Claims credit your off-chain balance. Withdraw to your wallet to move it on-chain, minimum 1000 pradha. The faucet pays network fees. Withdrawals are 1 hour apart. Rewards accrue from 00:00 UTC.",
+  "faucetBalance": "Off-chain balance: {count} pradha",
+  "@faucetBalance": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "faucetReady": "Ready to claim: {count} pradha",
+  "@faucetReady": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "faucetQuota": "Daily quota: {count} pradha",
+  "@faucetQuota": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "faucetClaimedToday": "Claimed today: {count} pradha",
+  "@faucetClaimedToday": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "faucetLoading": "Loading faucet balance…",
+  "faucetLoadFailed": "Could not refresh the faucet balance. Try again.",
+  "faucetRefresh": "Refresh faucet",
+  "faucetUnavailable": "Connect a bridge to load participation rewards.",
+  "faucetNotEligible": "No claim available. The balance refreshes automatically.",
+  "faucetDailyCap": "Daily limit reached. Check again after 00:00 UTC.",
+  "faucetReservoirFull": "Faucet balance is full. Withdraw before claiming again.",
+  "faucetInvalidAddress": "The bridge rejected this wallet address.",
+  "faucetStorageUnavailable": "Faucet is temporarily unavailable. Refresh the balance; contact the operator if this continues.",
+  "faucetWithdraw": "Withdraw to wallet",
+  "faucetWithdrawing": "Withdrawing…",
+  "faucetWithdrawConfirm": "Withdraw {count} pradha to this address? The faucet pays the fee. Wait for blockchain confirmation before spending.",
+  "@faucetWithdrawConfirm": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "faucetConfirmWithdraw": "Confirm withdrawal",
+  "faucetCancel": "Cancel",
+  "faucetClose": "Close",
+  "faucetWithdrawSubmitted": "Withdrawal submitted",
+  "faucetWithdrawAccepted": "{amount} pradha submitted to your wallet. Network fee: {fee} pradha, paid by the faucet. Await blockchain confirmation.",
+  "@faucetWithdrawAccepted": {
+    "placeholders": {
+      "amount": {
+        "type": "int"
+      },
+      "fee": {
+        "type": "int"
+      }
+    }
+  },
+  "faucetWithdrawReview": "Withdrawal needs review",
+  "faucetWithdrawUncertain": "The node accepted a transaction, but the faucet ledger needs recovery. Do not withdraw again. Contact the operator with this TXID and check your wallet.",
+  "faucetWithdrawFailed": "Withdrawal failed",
+  "faucetUnfunded": "The faucet has no on-chain funds yet. Your reward balance is unchanged. Contact the operator.",
+  "faucetWithdrawNotConfigured": "Withdrawals are not configured. Contact the operator.",
+  "faucetWithdrawCooldown": "Withdrawals are 1 hour apart. Wait before trying again.",
+  "faucetWithdrawWait": "Wait {seconds} seconds before withdrawing again.",
+  "@faucetWithdrawWait": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "faucetWithdrawMinimum": "Withdrawals require at least {count} pradha.",
+  "@faucetWithdrawMinimum": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "faucetWithdrawFeeBudget": "The daily network fee budget is exhausted. Try again after 00:00 UTC.",
+  "faucetWithdrawRetry": "Refresh the balance and try again. Contact the operator if withdrawal keeps failing.",
+  "faucetWithdrawNetwork": "Withdrawal status is unknown. Check your wallet and refresh the faucet before retrying.",
+  "faucetActivate": "Activate rewards",
+  "faucetActivated": "Rewards activated. They will accrue over time.",
+  "faucetActivationInfo": "Activate today's reward. It becomes claimable after 00:00 UTC.",
+  "faucetPendingPrevious": "From previous days: {count} pradha",
+  "@faucetPendingPrevious": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "faucetLegacyReady": "A claim is available. The bridge will confirm the amount."
 }

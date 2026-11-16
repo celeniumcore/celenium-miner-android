@@ -1,0 +1,24 @@
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
+
+Map<String, Object> balanceFixture({
+  int balance = 300,
+  int reward = 20,
+  int claimed = 0,
+  int quota = 1000,
+  bool? canClaim,
+}) => {
+  'balancePradha': balance,
+  'totalClaimedPradha': balance,
+  'canClaimToday': canClaim ?? reward > 0,
+  'rewardPradha': reward,
+  'dailyRewardPradha': quota,
+  'claimedTodayPradha': claimed,
+  'accruedTodayPradha': claimed + reward,
+  'serverTimeSecs': 1800,
+  'dripDurationSecs': 86400,
+};
+
+http.Response jsonResponse(Object body, [int status = 200]) =>
+    http.Response(jsonEncode(body), status);

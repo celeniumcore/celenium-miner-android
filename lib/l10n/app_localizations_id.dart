@@ -568,7 +568,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get faucetTitle => 'Rewards partisipasi';
 
   @override
-  String get faucetClaim => 'Klaim harian';
+  String get faucetClaim => 'Klaim bertahap';
 
   @override
   String get faucetClaiming => 'Mengklaim…';
@@ -579,8 +579,159 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
-  String get faucetClaimFailed => 'Klaim gagal';
+  String get faucetClaimFailed =>
+      'Klaim gagal. Perbarui saldo sebelum mencoba lagi.';
 
   @override
-  String get faucetAlreadyClaimed => 'Sudah klaim hari ini';
+  String get faucetAlreadyClaimed =>
+      'Belum ada yang bisa diklaim. Reward bertambah selama 24 jam.';
+
+  @override
+  String get faucetInfo =>
+      'Klaim masuk ke saldo off-chain. Tarik ke wallet agar masuk blockchain, minimum 1000 pradha. Faucet membayar biaya jaringan. Jeda penarikan 1 jam. Reward bertambah sejak 00:00 UTC.';
+
+  @override
+  String faucetBalance(int count) {
+    return 'Saldo off-chain: $count pradha';
+  }
+
+  @override
+  String faucetReady(int count) {
+    return 'Siap diklaim: $count pradha';
+  }
+
+  @override
+  String faucetQuota(int count) {
+    return 'Kuota harian: $count pradha';
+  }
+
+  @override
+  String faucetClaimedToday(int count) {
+    return 'Diklaim hari ini: $count pradha';
+  }
+
+  @override
+  String get faucetLoading => 'Memuat saldo faucet…';
+
+  @override
+  String get faucetLoadFailed =>
+      'Saldo faucet belum bisa diperbarui. Coba lagi.';
+
+  @override
+  String get faucetRefresh => 'Perbarui faucet';
+
+  @override
+  String get faucetUnavailable =>
+      'Hubungkan bridge untuk memuat reward partisipasi.';
+
+  @override
+  String get faucetNotEligible =>
+      'Klaim belum tersedia. Saldo diperbarui otomatis.';
+
+  @override
+  String get faucetDailyCap =>
+      'Batas harian tercapai. Cek lagi setelah 00:00 UTC.';
+
+  @override
+  String get faucetReservoirFull =>
+      'Saldo faucet penuh. Tarik saldo sebelum klaim lagi.';
+
+  @override
+  String get faucetInvalidAddress => 'Bridge menolak alamat dompet ini.';
+
+  @override
+  String get faucetStorageUnavailable =>
+      'Faucet sementara tidak tersedia. Perbarui saldo; hubungi operator jika masalah berlanjut.';
+
+  @override
+  String get faucetWithdraw => 'Tarik ke wallet';
+
+  @override
+  String get faucetWithdrawing => 'Menarik saldo…';
+
+  @override
+  String faucetWithdrawConfirm(int count) {
+    return 'Tarik $count pradha ke alamat ini? Faucet membayar biaya jaringan. Tunggu konfirmasi blockchain sebelum digunakan.';
+  }
+
+  @override
+  String get faucetConfirmWithdraw => 'Konfirmasi penarikan';
+
+  @override
+  String get faucetCancel => 'Batal';
+
+  @override
+  String get faucetClose => 'Tutup';
+
+  @override
+  String get faucetWithdrawSubmitted => 'Penarikan dikirim';
+
+  @override
+  String faucetWithdrawAccepted(int amount, int fee) {
+    return '$amount pradha dikirim ke wallet. Biaya jaringan: $fee pradha, dibayar faucet. Tunggu konfirmasi blockchain.';
+  }
+
+  @override
+  String get faucetWithdrawReview => 'Penarikan perlu diperiksa';
+
+  @override
+  String get faucetWithdrawUncertain =>
+      'Node menerima transaksi, tetapi ledger faucet perlu dipulihkan. Jangan tarik lagi. Hubungi operator dengan TXID ini dan periksa wallet.';
+
+  @override
+  String get faucetWithdrawFailed => 'Penarikan gagal';
+
+  @override
+  String get faucetUnfunded =>
+      'Faucet belum memiliki dana on-chain. Saldo reward tetap utuh. Hubungi operator.';
+
+  @override
+  String get faucetWithdrawNotConfigured =>
+      'Penarikan belum dikonfigurasi. Hubungi operator.';
+
+  @override
+  String get faucetWithdrawCooldown =>
+      'Jeda penarikan 1 jam. Tunggu sebelum mencoba lagi.';
+
+  @override
+  String faucetWithdrawWait(int seconds) {
+    return 'Tunggu $seconds detik sebelum menarik lagi.';
+  }
+
+  @override
+  String faucetWithdrawMinimum(int count) {
+    return 'Penarikan membutuhkan minimal $count pradha.';
+  }
+
+  @override
+  String get faucetWithdrawFeeBudget =>
+      'Anggaran biaya jaringan hari ini habis. Coba lagi setelah 00:00 UTC.';
+
+  @override
+  String get faucetWithdrawRetry =>
+      'Perbarui saldo dan coba lagi. Hubungi operator jika penarikan terus gagal.';
+
+  @override
+  String get faucetWithdrawNetwork =>
+      'Status penarikan belum diketahui. Periksa wallet dan perbarui faucet sebelum mencoba lagi.';
+
+  @override
+  String get faucetActivate => 'Aktifkan reward';
+
+  @override
+  String get faucetActivated =>
+      'Reward aktif. Jumlahnya akan bertambah seiring waktu.';
+
+  @override
+  String get faucetActivationInfo =>
+      'Aktifkan reward hari ini. Reward bisa diklaim setelah 00:00 UTC.';
+
+  @override
+  String faucetPendingPrevious(int count) {
+    return 'Dari hari sebelumnya: $count pradha';
+  }
+
+  @override
+  String get faucetLegacyReady =>
+      'Klaim tersedia. Jumlahnya dikonfirmasi oleh bridge.';
 }

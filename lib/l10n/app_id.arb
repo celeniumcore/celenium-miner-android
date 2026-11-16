@@ -258,7 +258,7 @@
   "aboutVersion": "Versi",
   "aboutCreatedBy": "Dibuat oleh",
   "faucetTitle": "Rewards partisipasi",
-  "faucetClaim": "Klaim harian",
+  "faucetClaim": "Klaim bertahap",
   "faucetClaiming": "Mengklaim…",
   "faucetClaimed": "+{count} pradha diklaim",
   "@faucetClaimed": {
@@ -269,6 +269,110 @@
       }
     }
   },
-  "faucetClaimFailed": "Klaim gagal",
-  "faucetAlreadyClaimed": "Sudah klaim hari ini"
+  "faucetClaimFailed": "Klaim gagal. Perbarui saldo sebelum mencoba lagi.",
+  "faucetAlreadyClaimed": "Belum ada yang bisa diklaim. Reward bertambah selama 24 jam.",
+  "faucetInfo": "Klaim masuk ke saldo off-chain. Tarik ke wallet agar masuk blockchain, minimum 1000 pradha. Faucet membayar biaya jaringan. Jeda penarikan 1 jam. Reward bertambah sejak 00:00 UTC.",
+  "faucetBalance": "Saldo off-chain: {count} pradha",
+  "@faucetBalance": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "faucetReady": "Siap diklaim: {count} pradha",
+  "@faucetReady": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "faucetQuota": "Kuota harian: {count} pradha",
+  "@faucetQuota": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "faucetClaimedToday": "Diklaim hari ini: {count} pradha",
+  "@faucetClaimedToday": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "faucetLoading": "Memuat saldo faucet…",
+  "faucetLoadFailed": "Saldo faucet belum bisa diperbarui. Coba lagi.",
+  "faucetRefresh": "Perbarui faucet",
+  "faucetUnavailable": "Hubungkan bridge untuk memuat reward partisipasi.",
+  "faucetNotEligible": "Klaim belum tersedia. Saldo diperbarui otomatis.",
+  "faucetDailyCap": "Batas harian tercapai. Cek lagi setelah 00:00 UTC.",
+  "faucetReservoirFull": "Saldo faucet penuh. Tarik saldo sebelum klaim lagi.",
+  "faucetInvalidAddress": "Bridge menolak alamat dompet ini.",
+  "faucetStorageUnavailable": "Faucet sementara tidak tersedia. Perbarui saldo; hubungi operator jika masalah berlanjut.",
+  "faucetWithdraw": "Tarik ke wallet",
+  "faucetWithdrawing": "Menarik saldo…",
+  "faucetWithdrawConfirm": "Tarik {count} pradha ke alamat ini? Faucet membayar biaya jaringan. Tunggu konfirmasi blockchain sebelum digunakan.",
+  "@faucetWithdrawConfirm": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "faucetConfirmWithdraw": "Konfirmasi penarikan",
+  "faucetCancel": "Batal",
+  "faucetClose": "Tutup",
+  "faucetWithdrawSubmitted": "Penarikan dikirim",
+  "faucetWithdrawAccepted": "{amount} pradha dikirim ke wallet. Biaya jaringan: {fee} pradha, dibayar faucet. Tunggu konfirmasi blockchain.",
+  "@faucetWithdrawAccepted": {
+    "placeholders": {
+      "amount": {
+        "type": "int"
+      },
+      "fee": {
+        "type": "int"
+      }
+    }
+  },
+  "faucetWithdrawReview": "Penarikan perlu diperiksa",
+  "faucetWithdrawUncertain": "Node menerima transaksi, tetapi ledger faucet perlu dipulihkan. Jangan tarik lagi. Hubungi operator dengan TXID ini dan periksa wallet.",
+  "faucetWithdrawFailed": "Penarikan gagal",
+  "faucetUnfunded": "Faucet belum memiliki dana on-chain. Saldo reward tetap utuh. Hubungi operator.",
+  "faucetWithdrawNotConfigured": "Penarikan belum dikonfigurasi. Hubungi operator.",
+  "faucetWithdrawCooldown": "Jeda penarikan 1 jam. Tunggu sebelum mencoba lagi.",
+  "faucetWithdrawWait": "Tunggu {seconds} detik sebelum menarik lagi.",
+  "@faucetWithdrawWait": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "faucetWithdrawMinimum": "Penarikan membutuhkan minimal {count} pradha.",
+  "@faucetWithdrawMinimum": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "faucetWithdrawFeeBudget": "Anggaran biaya jaringan hari ini habis. Coba lagi setelah 00:00 UTC.",
+  "faucetWithdrawRetry": "Perbarui saldo dan coba lagi. Hubungi operator jika penarikan terus gagal.",
+  "faucetWithdrawNetwork": "Status penarikan belum diketahui. Periksa wallet dan perbarui faucet sebelum mencoba lagi.",
+  "faucetActivate": "Aktifkan reward",
+  "faucetActivated": "Reward aktif. Jumlahnya akan bertambah seiring waktu.",
+  "faucetActivationInfo": "Aktifkan reward hari ini. Reward bisa diklaim setelah 00:00 UTC.",
+  "faucetPendingPrevious": "Dari hari sebelumnya: {count} pradha",
+  "@faucetPendingPrevious": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "faucetLegacyReady": "Klaim tersedia. Jumlahnya dikonfirmasi oleh bridge."
 }

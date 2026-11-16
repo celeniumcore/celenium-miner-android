@@ -90,11 +90,13 @@ class BridgeApi {
 
   /// `GET /api/faucet/balance?address=...` — off-chain participation balance.
   Future<FaucetBalance?> fetchFaucetBalance(String address) async {
-    final body = await _get('/api/faucet/balance?address=$address');
+    final body = await _get(
+      '/api/faucet/balance?${Uri(queryParameters: {'address': address}).query}',
+    );
     return FaucetBalance.tryParse(body);
   }
 
-  /// `POST /api/faucet/claim` — claim the daily participation reward.
+  /// `POST /api/faucet/claim` — claim the accrued part of today's reward.
   ///
   /// [deviceId] is the Android ID: the faucet caps how many distinct wallets a
   /// single device may register (anti-sybil). It is sent raw, never stored.
@@ -102,10 +104,27 @@ class BridgeApi {
     final body = await _post('/api/faucet/claim', {
       'address': address,
       'deviceId': deviceId,
-    });
+    }, acceptBridgeError: true);
     final parsed = FaucetClaimResult.tryParse(body);
     if (parsed == null) {
       throw const FormatException('Bridge returned an unexpected faucet body');
+    }
+    return parsed;
+  }
+
+  Future<FaucetWithdrawResult> withdrawFaucet(
+    String address, {
+    int? amountPradha,
+  }) async {
+    final body = await _post('/api/faucet/withdraw', {
+      'address': address,
+      'amountPradha': ?amountPradha,
+    }, acceptBridgeError: true);
+    final parsed = FaucetWithdrawResult.tryParse(body);
+    if (parsed == null) {
+      throw const FormatException(
+        'Bridge returned an unexpected withdrawal body',
+      );
     }
     return parsed;
   }
@@ -167,7 +186,11 @@ class BridgeApi {
     return jsonDecode(response.body);
   }
 
-  Future<Object?> _post(String path, Map<String, dynamic> payload) async {
+  Future<Object?> _post(
+    String path,
+    Map<String, dynamic> payload, {
+    bool acceptBridgeError = false,
+  }) async {
     final uri = Uri.parse('$baseUrl$path');
     final response = await _client
         .post(
@@ -176,6 +199,12 @@ class BridgeApi {
           body: jsonEncode(payload),
         )
         .timeout(sendTimeout);
+    if (acceptBridgeError &&
+        response.statusCode >= 400 &&
+        response.statusCode < 600) {
+      final body = jsonDecode(response.body);
+      if (body is Map<String, dynamic> && body['error'] is String) return body;
+    }
     if (response.statusCode != 200) {
       throw HttpException(
         'Bridge returned HTTP ${response.statusCode} for $path',

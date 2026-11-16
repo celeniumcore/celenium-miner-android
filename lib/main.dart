@@ -680,6 +680,11 @@ class _MinerHomeState extends State<MinerHome> {
         return MiningScreen(
           readout: _engine.readout,
           nodeAddress: '${MiningEngine.host}:${MiningEngine.port}',
+          faucetAddress: _engine.address,
+          faucetApi: _api,
+          onFaucetWithdrawn: () {
+            if (mounted) setState(() => _tab = _Tab.wallet);
+          },
           onOpenActivity: () => _open(_Route.activity),
           onConnectNode: () => _open(_Route.bridge),
           onSetMining: _onMiningToggle,
