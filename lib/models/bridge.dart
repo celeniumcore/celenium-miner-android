@@ -499,23 +499,34 @@ class FaucetWithdrawResult {
 
   static FaucetWithdrawResult? tryParse(Object? json) {
     if (json is! Map<String, dynamic>) return null;
-    final txid = json['txid'] is String && (json['txid'] as String).isNotEmpty
+    var txid = json['txid'] is String && (json['txid'] as String).isNotEmpty
         ? json['txid'] as String
         : null;
     final error = json['error'];
+    final errorCode = json['errorCode'] is String
+        ? json['errorCode'] as String
+        : null;
     if (error is String) {
+      if (errorCode == 'TransferPending') {
+        final pendingTxid = json['pendingTxid'];
+        if (pendingTxid is String &&
+            pendingTxid.length == 64 &&
+            RegExp(r'^[0-9a-fA-F]+$').hasMatch(pendingTxid)) {
+          if (txid != null && txid != pendingTxid) return null;
+          txid = pendingTxid;
+        }
+      }
       return FaucetWithdrawResult._(
         ok: false,
         error: error,
         txid: txid,
-        errorCode: json['errorCode'] is String
-            ? json['errorCode'] as String
-            : null,
+        errorCode: errorCode,
         balancePradha: _faucetInt(json['balancePradha']),
         remainingSecs: _faucetInt(json['remainingSecs']),
         minAmountPradha: _faucetInt(json['minAmountPradha']),
       );
     }
+    if (errorCode == 'TransferPending') return null;
     final amount = _faucetInt(json['amountPradha']);
     final fee = _faucetInt(json['feePradha']);
     final balance = _faucetInt(json['balancePradha']);
