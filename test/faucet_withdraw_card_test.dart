@@ -72,6 +72,10 @@ void main() {
       expect(find.text('fixture:wallet'), findsOneWidget);
       expect(find.textContaining('1000 pradha'), findsWidgets);
       expect(posts, 0);
+      expect(
+        tester.widget<FilledButton>(find.byType(FilledButton)).onPressed,
+        isNull,
+      );
       await tester.tap(find.text('Confirm withdrawal'));
       await settle(tester);
       expect(posts, 1);
@@ -82,6 +86,10 @@ void main() {
       await tester.tap(find.text('Close'));
       await settle(tester);
       expect(refreshed, 1);
+      expect(
+        tester.widget<FilledButton>(find.byType(FilledButton)).onPressed,
+        isNotNull,
+      );
       await tester.pumpWidget(const SizedBox());
     },
   );
@@ -121,6 +129,13 @@ void main() {
         'minAmountPradha': 1000,
       },
       text: 'Withdrawals require at least 1000 pradha.',
+    ),
+    (
+      body: {
+        'error': 'SmallTransferNotSupported: storage mass exceeds the limit',
+        'errorCode': 'SmallTransferNotSupported',
+      },
+      text: 'The node cannot process this small withdrawal yet. Your reward balance is unchanged. Contact the operator.',
     ),
     (
       body: {'error': 'faucet withdrawals are not configured'},

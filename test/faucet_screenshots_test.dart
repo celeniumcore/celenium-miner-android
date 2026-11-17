@@ -22,7 +22,7 @@ void main() {
       locale: 'id',
       width: 390.0,
       scale: 1.0,
-      body: balanceFixture(balance: 1000, reward: 0),
+      body: dailyBalanceFixture(balance: 1000, reward: 0, claimed: 1000),
       failed: false,
     ),
     (
@@ -30,7 +30,7 @@ void main() {
       locale: 'id',
       width: 390.0,
       scale: 1.0,
-      body: balanceFixture(),
+      body: dailyBalanceFixture(),
       failed: false,
     ),
     (
@@ -38,7 +38,7 @@ void main() {
       locale: 'en',
       width: 390.0,
       scale: 1.0,
-      body: balanceFixture(balance: 320, reward: 0, claimed: 20),
+      body: dailyBalanceFixture(balance: 1000, reward: 0, claimed: 1000),
       failed: false,
     ),
     (
@@ -65,7 +65,7 @@ void main() {
       locale: 'id',
       width: 320.0,
       scale: 2.0,
-      body: balanceFixture(quota: 700),
+      body: dailyBalanceFixture(),
       failed: false,
     ),
   ]) {
@@ -161,7 +161,7 @@ void main() {
       addTearDown(tester.view.reset);
       final api = BridgeApi(
         baseUrl: 'http://fixture.invalid',
-        client: MockClient((_) async => jsonResponse(balanceFixture())),
+        client: MockClient((_) async => jsonResponse(dailyBalanceFixture())),
       );
       await tester.pumpWidget(
         MaterialApp(
@@ -191,7 +191,8 @@ void main() {
       await tester.ensureVisible(find.byType(FaucetCard));
       await tester.pump();
       expect(find.byType(FaucetCard), findsOneWidget);
-      expect(find.text('Siap diklaim: 20 pradha'), findsOneWidget);
+      expect(find.text('1000 pradha per hari UTC'), findsOneWidget);
+      expect(find.text('Siap diklaim: 1000 pradha'), findsOneWidget);
       expect(tester.takeException(), isNull);
       await expectLater(
         find.byType(Scaffold),

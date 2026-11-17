@@ -270,7 +270,7 @@
     }
   },
   "faucetClaimFailed": "Claim failed. Refresh the balance before trying again.",
-  "faucetAlreadyClaimed": "Nothing accrued yet. Rewards build up over 24 hours.",
+  "faucetAlreadyClaimed": "Today's reward is already claimed. Claim again after 00:00 UTC tomorrow.",
   "faucetInfo": "Claims credit your off-chain balance. Withdraw to your wallet to move it on-chain, minimum 1000 pradha. The faucet pays network fees. Withdrawals are 1 hour apart. Rewards accrue from 00:00 UTC.",
   "faucetBalance": "Off-chain balance: {count} pradha",
   "@faucetBalance": {
@@ -374,5 +374,11 @@
       }
     }
   },
-  "faucetLegacyReady": "A claim is available. The bridge will confirm the amount."
+  "faucetLegacyReady": "A claim is available. The bridge will confirm the amount.",
+  "faucetNothingAccrued": "Nothing accrued yet. Rewards build up over 24 hours.",
+  "faucetClaimDaily": "Claim daily reward",
+  "faucetDailyReward": "1000 pradha per UTC day",
+  "faucetDailyInfo": "Claim 1000 pradha per UTC day, available immediately. Claims credit your off-chain balance. Withdrawals to your wallet require at least 1000 pradha and are 1 hour apart. The faucet must have on-chain funds and pays the network fee.",
+  "faucetNeedsWallet": "Create or import a wallet before claiming rewards.",
+  "faucetSmallTransferUnsupported": "The node cannot process this small withdrawal yet. Your reward balance is unchanged. Contact the operator."
 }

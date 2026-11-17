@@ -1145,8 +1145,32 @@ abstract class AppLocalizations {
   /// No description provided for @faucetAlreadyClaimed.
   ///
   /// In en, this message translates to:
-  /// **'Nothing accrued yet. Rewards build up over 24 hours.'**
+  /// **'Today\'s reward is already claimed. Claim again after 00:00 UTC tomorrow.'**
   String get faucetAlreadyClaimed;
+
+  /// No description provided for @faucetNothingAccrued.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing accrued yet. Rewards build up over 24 hours.'**
+  String get faucetNothingAccrued;
+
+  /// No description provided for @faucetClaimDaily.
+  ///
+  /// In en, this message translates to:
+  /// **'Claim daily reward'**
+  String get faucetClaimDaily;
+
+  /// No description provided for @faucetDailyReward.
+  ///
+  /// In en, this message translates to:
+  /// **'1000 pradha per UTC day'**
+  String get faucetDailyReward;
+
+  /// No description provided for @faucetDailyInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Claim 1000 pradha per UTC day, available immediately. Claims credit your off-chain balance. Withdrawals to your wallet require at least 1000 pradha and are 1 hour apart. The faucet must have on-chain funds and pays the network fee.'**
+  String get faucetDailyInfo;
 
   /// No description provided for @faucetInfo.
   ///
@@ -1201,6 +1225,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Connect a bridge to load participation rewards.'**
   String get faucetUnavailable;
+
+  /// No description provided for @faucetNeedsWallet.
+  ///
+  /// In en, this message translates to:
+  /// **'Create or import a wallet before claiming rewards.'**
+  String get faucetNeedsWallet;
 
   /// No description provided for @faucetNotEligible.
   ///
@@ -1303,6 +1333,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The faucet has no on-chain funds yet. Your reward balance is unchanged. Contact the operator.'**
   String get faucetUnfunded;
+
+  /// No description provided for @faucetSmallTransferUnsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'The node cannot process this small withdrawal yet. Your reward balance is unchanged. Contact the operator.'**
+  String get faucetSmallTransferUnsupported;
 
   /// No description provided for @faucetWithdrawNotConfigured.
   ///

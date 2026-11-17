@@ -270,7 +270,7 @@
     }
   },
   "faucetClaimFailed": "Klaim gagal. Perbarui saldo sebelum mencoba lagi.",
-  "faucetAlreadyClaimed": "Belum ada yang bisa diklaim. Reward bertambah selama 24 jam.",
+  "faucetAlreadyClaimed": "Reward hari ini sudah diklaim. Klaim berikutnya tersedia setelah 00:00 UTC besok.",
   "faucetInfo": "Klaim masuk ke saldo off-chain. Tarik ke wallet agar masuk blockchain, minimum 1000 pradha. Faucet membayar biaya jaringan. Jeda penarikan 1 jam. Reward bertambah sejak 00:00 UTC.",
   "faucetBalance": "Saldo off-chain: {count} pradha",
   "@faucetBalance": {
@@ -374,5 +374,11 @@
       }
     }
   },
-  "faucetLegacyReady": "Klaim tersedia. Jumlahnya dikonfirmasi oleh bridge."
+  "faucetLegacyReady": "Klaim tersedia. Jumlahnya dikonfirmasi oleh bridge.",
+  "faucetNothingAccrued": "Belum ada yang bisa diklaim. Reward bertambah selama 24 jam.",
+  "faucetClaimDaily": "Klaim reward harian",
+  "faucetDailyReward": "1000 pradha per hari UTC",
+  "faucetDailyInfo": "Klaim 1000 pradha per hari UTC, langsung tersedia. Klaim masuk ke saldo off-chain. Penarikan ke wallet minimal 1000 pradha dengan jeda 1 jam. Faucet harus memiliki dana on-chain dan membayar biaya jaringan.",
+  "faucetNeedsWallet": "Buat atau impor wallet sebelum mengklaim reward.",
+  "faucetSmallTransferUnsupported": "Node belum dapat memproses penarikan kecil ini. Saldo reward tetap utuh. Hubungi operator."
 }

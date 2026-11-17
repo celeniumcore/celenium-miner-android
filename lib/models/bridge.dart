@@ -350,6 +350,7 @@ class FaucetBalance {
   final int? dripDurationSecs;
   final bool? canStartDrip;
   final int? pendingPreviousPradha;
+  final String? rewardModel;
 
   const FaucetBalance({
     required this.balancePradha,
@@ -363,6 +364,7 @@ class FaucetBalance {
     this.dripDurationSecs,
     this.canStartDrip,
     this.pendingPreviousPradha,
+    this.rewardModel,
   });
 
   static FaucetBalance? tryParse(Object? json) {
@@ -397,6 +399,9 @@ class FaucetBalance {
       dripDurationSecs: _faucetInt(json['dripDurationSecs']),
       canStartDrip: json['canStartDrip'] as bool?,
       pendingPreviousPradha: _faucetInt(json['pendingPreviousPradha']),
+      rewardModel: json['rewardModel'] is String
+          ? json['rewardModel'] as String
+          : null,
     );
   }
 }
@@ -410,6 +415,7 @@ class FaucetClaimResult {
   final String? error;
   final String? errorCode;
   final bool? startedDrip;
+  final String? rewardModel;
 
   const FaucetClaimResult.success({
     required this.balancePradha,
@@ -417,6 +423,7 @@ class FaucetClaimResult {
     this.dailyRewardPradha,
     this.claimedTodayPradha,
     this.startedDrip,
+    this.rewardModel,
   }) : error = null,
        errorCode = null;
 
@@ -425,7 +432,8 @@ class FaucetClaimResult {
       rewardPradha = 0,
       dailyRewardPradha = null,
       claimedTodayPradha = null,
-      startedDrip = null;
+      startedDrip = null,
+      rewardModel = null;
 
   bool get ok => error == null;
 
@@ -458,6 +466,9 @@ class FaucetClaimResult {
       dailyRewardPradha: _faucetInt(json['dailyRewardPradha']),
       claimedTodayPradha: _faucetInt(json['claimedTodayPradha']),
       startedDrip: json['startedDrip'] as bool?,
+      rewardModel: json['rewardModel'] is String
+          ? json['rewardModel'] as String
+          : null,
     );
   }
 }

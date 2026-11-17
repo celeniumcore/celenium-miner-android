@@ -13,9 +13,13 @@ import 'package:http/testing.dart';
 
 import 'support/faucet_fixtures.dart';
 
-Widget host(BridgeApi? api, {String address = 'fixture:wallet'}) => MaterialApp(
+Widget host(
+  BridgeApi? api, {
+  String address = 'fixture:wallet',
+  String locale = 'en',
+}) => MaterialApp(
   theme: buildCenTheme(),
-  locale: const Locale('en'),
+  locale: Locale(locale),
   localizationsDelegates: AppLocalizations.localizationsDelegates,
   supportedLocales: AppLocalizations.supportedLocales,
   home: Scaffold(
@@ -32,6 +36,160 @@ Future<void> settle(WidgetTester tester) async {
 }
 
 void main() {
+  for (final scenario in [
+    (balance: 0, reward: 1000, claimed: 0, pending: 0, locale: 'en'),
+    (balance: 250, reward: 750, claimed: 250, pending: 0, locale: 'id'),
+    (balance: 0, reward: 1600, claimed: 0, pending: 600, locale: 'en'),
+  ]) {
+    testWidgets(
+      'daily-fixed ${scenario.reward} credit stays server authoritative',
+      (tester) async {
+        var posts = 0;
+        var balance = scenario.balance;
+        var reward = scenario.reward;
+        var claimed = scenario.claimed;
+        final api = BridgeApi(
+          baseUrl: 'http://fixture.invalid',
+          client: MockClient((request) async {
+            if (request.method == 'POST') {
+              posts++;
+              if (posts > 1) {
+                return jsonResponse({
+                  'error': 'already claimed today',
+                  'errorCode': 'AlreadyClaimed',
+                }, 409);
+              }
+              balance += reward;
+              claimed = 1000;
+              final result = jsonResponse({
+                'ok': true,
+                'balancePradha': balance,
+                'rewardPradha': reward,
+                'dailyRewardPradha': 1000,
+                'claimedTodayPradha': claimed,
+                'rewardModel': 'daily-fixed',
+              });
+              reward = 0;
+              return result;
+            }
+            return jsonResponse(
+              dailyBalanceFixture(
+                balance: balance,
+                reward: reward,
+                claimed: claimed,
+                pendingPrevious: posts == 0 ? scenario.pending : 0,
+              ),
+            );
+          }),
+        );
+        await tester.pumpWidget(host(api, locale: scenario.locale));
+        await settle(tester);
+        final indonesian = scenario.locale == 'id';
+        expect(
+          find.text(
+            indonesian ? '1000 pradha per hari UTC' : '1000 pradha per UTC day',
+          ),
+          findsOneWidget,
+        );
+        final button = find.byType(FilledButton);
+        expect(
+          find.widgetWithText(
+            FilledButton,
+            indonesian ? 'Klaim reward harian' : 'Claim daily reward',
+          ),
+          findsOneWidget,
+        );
+        await tester.tap(button);
+        await settle(tester);
+        expect(posts, 1);
+        expect(
+          find.text(
+            indonesian
+                ? '+${scenario.reward} pradha diklaim'
+                : 'Claimed +${scenario.reward} pradha',
+          ),
+          findsOneWidget,
+        );
+        expect(
+          find.text(
+            indonesian
+                ? 'Saldo off-chain: $balance pradha'
+                : 'Off-chain balance: $balance pradha',
+          ),
+          findsOneWidget,
+        );
+        expect(
+          tester.widget<OutlinedButton>(find.byType(OutlinedButton)).onPressed,
+          isNotNull,
+        );
+        expect(tester.widget<FilledButton>(button).onPressed, isNotNull);
+        await tester.tap(button);
+        await settle(tester);
+        expect(posts, 2);
+        expect(
+          find.text(
+            indonesian
+                ? 'Reward hari ini sudah diklaim. Klaim berikutnya tersedia setelah 00:00 UTC besok.'
+                : 'Today\'s reward is already claimed. Claim again after 00:00 UTC tomorrow.',
+          ),
+          findsWidgets,
+        );
+        expect(
+          find.text(
+            indonesian
+                ? 'Saldo off-chain: $balance pradha'
+                : 'Off-chain balance: $balance pradha',
+          ),
+          findsOneWidget,
+        );
+        expect(tester.widget<FilledButton>(button).onPressed, isNotNull);
+        expect(tester.takeException(), isNull);
+        await tester.pumpWidget(const SizedBox());
+      },
+    );
+  }
+
+  testWidgets('server eligibility never disables a claim attempt', (
+    tester,
+  ) async {
+    var posts = 0;
+    final api = BridgeApi(
+      baseUrl: 'http://fixture.invalid',
+      client: MockClient((request) async {
+        if (request.method == 'POST') {
+          posts++;
+          return jsonResponse({
+            'error': 'already claimed today',
+            'errorCode': 'AlreadyClaimed',
+          }, 409);
+        }
+        return jsonResponse(
+          balanceFixture(
+            balance: 1000,
+            reward: 0,
+            claimed: 1000,
+            canClaim: false,
+          ),
+        );
+      }),
+    );
+    await tester.pumpWidget(host(api));
+    await settle(tester);
+    expect(
+      tester.widget<FilledButton>(find.byType(FilledButton)).onPressed,
+      isNotNull,
+    );
+    await tester.tap(find.byType(FilledButton));
+    await settle(tester);
+    expect(posts, 1);
+    expect(find.text('Off-chain balance: 1000 pradha'), findsOneWidget);
+    expect(
+      tester.widget<FilledButton>(find.byType(FilledButton)).onPressed,
+      isNotNull,
+    );
+    await tester.pumpWidget(const SizedBox());
+  });
+
   testWidgets('claim and refresh work through keyboard focus', (tester) async {
     var posts = 0;
     final api = BridgeApi(
@@ -106,12 +264,52 @@ void main() {
       expect(find.text('Off-chain balance: 320 pradha'), findsOneWidget);
       expect(
         tester.widget<FilledButton>(find.byType(FilledButton)).onPressed,
-        isNull,
+        isNotNull,
       );
       expect(posts, 1);
       await tester.pumpWidget(const SizedBox());
     },
   );
+
+  for (final missingWallet in [false, true]) {
+    testWidgets(
+      'claim explains missing ${missingWallet ? 'wallet' : 'bridge'}',
+      (tester) async {
+        var requests = 0;
+        final api = BridgeApi(
+          baseUrl: 'http://fixture.invalid',
+          client: MockClient((_) async {
+            requests++;
+            return jsonResponse(balanceFixture());
+          }),
+        );
+        await tester.pumpWidget(
+          host(
+            missingWallet ? api : null,
+            address: missingWallet ? '' : 'fixture:wallet',
+          ),
+        );
+        await settle(tester);
+        await tester.tap(find.byType(FilledButton));
+        await settle(tester);
+        expect(find.byType(SnackBar), findsOneWidget);
+        expect(
+          find.descendant(
+            of: find.byType(SnackBar),
+            matching: find.text(
+              missingWallet
+                  ? 'Create or import a wallet before claiming rewards.'
+                  : 'Connect a bridge to load participation rewards.',
+            ),
+          ),
+          findsOneWidget,
+        );
+        expect(requests, 0);
+        expect(tester.takeException(), isNull);
+        await tester.pumpWidget(const SizedBox());
+      },
+    );
+  }
 
   testWidgets('balance timeout becomes a retryable error', (tester) async {
     final pendingRead = Completer<http.Response>();
@@ -133,49 +331,49 @@ void main() {
     await settle(tester);
   });
 
-  testWidgets('failed reads disable stale claims and refresh recovers', (
-    tester,
-  ) async {
-    var fail = true;
-    final api = BridgeApi(
-      baseUrl: 'http://fixture.invalid',
-      client: MockClient(
-        (_) async => fail
-            ? http.Response('unavailable', 503)
-            : jsonResponse(balanceFixture()),
-      ),
-    );
-    await tester.pumpWidget(host(api));
-    await settle(tester);
-    expect(
-      find.text('Could not refresh the faucet balance. Try again.'),
-      findsOneWidget,
-    );
-    expect(
-      tester.widget<FilledButton>(find.byType(FilledButton)).onPressed,
-      isNull,
-    );
-    fail = false;
-    await tester.tap(find.byTooltip('Refresh faucet'));
-    await settle(tester);
-    expect(find.text('Ready to claim: 20 pradha'), findsOneWidget);
-    fail = true;
-    await tester.pump(const Duration(seconds: 46));
-    await settle(tester);
-    expect(find.text('Off-chain balance: 300 pradha'), findsOneWidget);
-    expect(
-      tester.widget<FilledButton>(find.byType(FilledButton)).onPressed,
-      isNull,
-    );
-    fail = false;
-    await tester.pump(const Duration(seconds: 46));
-    await settle(tester);
-    expect(
-      tester.widget<FilledButton>(find.byType(FilledButton)).onPressed,
-      isNotNull,
-    );
-    await tester.pumpWidget(const SizedBox());
-  });
+  testWidgets(
+    'claim after a failed first balance read uses the server result',
+    (tester) async {
+      var posts = 0;
+      final api = BridgeApi(
+        baseUrl: 'http://fixture.invalid',
+        client: MockClient((request) async {
+          if (request.method == 'POST') {
+            posts++;
+            return jsonResponse({
+              'ok': true,
+              'balancePradha': 1000,
+              'rewardPradha': 1000,
+              'rewardModel': 'daily-fixed',
+            });
+          }
+          return http.Response('unavailable', 503);
+        }),
+      );
+      await tester.pumpWidget(host(api));
+      await settle(tester);
+      expect(
+        find.text('Could not refresh the faucet balance. Try again.'),
+        findsOneWidget,
+      );
+      expect(
+        tester.widget<FilledButton>(find.byType(FilledButton)).onPressed,
+        isNotNull,
+      );
+      await tester.tap(find.byType(FilledButton));
+      await settle(tester);
+      expect(tester.takeException(), isNull);
+      expect(posts, 1);
+      expect(find.text('Claimed +1000 pradha'), findsOneWidget);
+      expect(find.text('Off-chain balance: 1000 pradha'), findsOneWidget);
+      expect(find.text('1000 pradha per UTC day'), findsOneWidget);
+      expect(
+        tester.widget<FilledButton>(find.byType(FilledButton)).onPressed,
+        isNotNull,
+      );
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
 
   testWidgets('network claim failures recover without an unhandled exception', (
     tester,
@@ -198,7 +396,7 @@ void main() {
     expect(tester.takeException(), isNull);
     expect(
       tester.widget<FilledButton>(find.byType(FilledButton)).onPressed,
-      isNull,
+      isNotNull,
     );
     await tester.tap(find.byTooltip('Refresh faucet'));
     await settle(tester);
@@ -238,8 +436,64 @@ void main() {
       expect(find.text(error.value), findsWidgets);
       expect(
         tester.widget<FilledButton>(find.byType(FilledButton)).onPressed,
-        isNull,
+        isNotNull,
       );
+      await tester.pumpWidget(const SizedBox());
+    });
+  }
+
+  for (final staleFirst in [false, true]) {
+    testWidgets('claim supersedes pending refresh, stale first: $staleFirst', (
+      tester,
+    ) async {
+      final stale = Completer<http.Response>();
+      final claim = Completer<http.Response>();
+      final fresh = Completer<http.Response>();
+      var reads = 0;
+      final api = BridgeApi(
+        baseUrl: 'http://fixture.invalid',
+        client: MockClient((request) {
+          if (request.method == 'POST') return claim.future;
+          reads++;
+          return switch (reads) {
+            1 => Future.value(jsonResponse(balanceFixture())),
+            2 => stale.future,
+            _ => fresh.future,
+          };
+        }),
+      );
+      await tester.pumpWidget(host(api));
+      await settle(tester);
+      await tester.tap(find.byTooltip('Refresh faucet'));
+      await settle(tester);
+      await tester.tap(find.byType(FilledButton));
+      await settle(tester);
+      if (staleFirst) {
+        stale.complete(jsonResponse(balanceFixture(balance: 11)));
+        await settle(tester);
+      }
+      claim.complete(
+        jsonResponse({'ok': true, 'balancePradha': 1000, 'rewardPradha': 700}),
+      );
+      await settle(tester);
+      expect(reads, 3);
+      expect(find.text('Off-chain balance: 1000 pradha'), findsOneWidget);
+      if (!staleFirst) {
+        stale.complete(jsonResponse(balanceFixture(balance: 11)));
+        await settle(tester);
+      }
+      expect(find.text('Off-chain balance: 11 pradha'), findsNothing);
+      fresh.complete(jsonResponse(balanceFixture(balance: 1000, reward: 0)));
+      await settle(tester);
+      expect(
+        tester.widget<FilledButton>(find.byType(FilledButton)).onPressed,
+        isNotNull,
+      );
+      expect(
+        tester.widget<IconButton>(find.byType(IconButton)).onPressed,
+        isNotNull,
+      );
+      expect(tester.takeException(), isNull);
       await tester.pumpWidget(const SizedBox());
     });
   }
@@ -488,7 +742,7 @@ void main() {
     expect(find.text('Off-chain balance: 0 pradha'), findsOneWidget);
     expect(
       tester.widget<FilledButton>(find.byType(FilledButton)).onPressed,
-      isNull,
+      isNotNull,
     );
     await tester.pumpWidget(const SizedBox());
   });
@@ -501,7 +755,7 @@ void main() {
         );
   });
 
-  testWidgets('claims only the accrued delta and polls without reopening', (
+  testWidgets('legacy claims retry without duplicate credit and keep polling', (
     tester,
   ) async {
     var reward = 20;
@@ -518,6 +772,12 @@ void main() {
             'deviceId': 'fixture-device',
           });
           posts++;
+          if (reward == 0) {
+            return jsonResponse({
+              'error': 'nothing accrued yet',
+              'errorCode': 'NothingAccrued',
+            }, 409);
+          }
           balance += reward;
           claimed += reward;
           final result = jsonResponse({
@@ -548,11 +808,12 @@ void main() {
     expect(find.text('Off-chain balance: 320 pradha'), findsOneWidget);
     expect(
       tester.widget<FilledButton>(find.byType(FilledButton)).onPressed,
-      isNull,
+      isNotNull,
     );
     await tester.tap(find.text('Claim accrued'));
     await settle(tester);
-    expect(posts, 1);
+    expect(posts, 2);
+    expect(find.text('Off-chain balance: 320 pradha'), findsOneWidget);
     reward = 1;
     await tester.pump(const Duration(seconds: 46));
     await settle(tester);
