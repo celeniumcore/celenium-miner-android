@@ -20,5 +20,25 @@ Map<String, Object> balanceFixture({
   'dripDurationSecs': 86400,
 };
 
+Map<String, Object> dailyBalanceFixture({
+  int balance = 0,
+  int reward = 1000,
+  int claimed = 0,
+  int pendingPrevious = 0,
+}) => {
+  'balancePradha': balance,
+  'totalClaimedPradha': balance,
+  'canClaimToday': reward > 0,
+  'rewardPradha': reward,
+  'dailyRewardPradha': 1000,
+  'claimedTodayPradha': claimed,
+  'pendingPreviousPradha': pendingPrevious,
+  'rewardModel': 'daily-fixed',
+  'dripModel': 'daily-fixed',
+  'dripDurationSecs': 0,
+  'claimPeriodSecs': 86400,
+  'canStartDrip': false,
+};
+
 http.Response jsonResponse(Object body, [int status = 200]) =>
     http.Response(jsonEncode(body), status);

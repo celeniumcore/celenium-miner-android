@@ -47,17 +47,13 @@ class _FaucetCardState extends State<FaucetCard> with WidgetsBindingObserver {
       !_withdrawNeedsReview &&
       _available &&
       (_balance?.balancePradha ?? 0) >= 1000;
-  bool get _canClaim =>
-      !_working &&
-      !_reading &&
-      !_failed &&
-      _available &&
-      ((_balance?.canStartDrip ?? false) ||
-          ((_balance?.canClaimToday ?? false) &&
-              (_balance?.rewardPradha == null || _balance!.rewardPradha! > 0)));
+  bool get _canClaim => !_working;
 
+  bool get _dailyFixed => _balance?.rewardModel == 'daily-fixed';
   bool get _activating =>
-      (_balance?.canStartDrip ?? false) && (_balance?.rewardPradha ?? 0) == 0;
+      !_dailyFixed &&
+      (_balance?.canStartDrip ?? false) &&
+      (_balance?.rewardPradha ?? 0) == 0;
 
   @override
   void initState() {
@@ -136,12 +132,26 @@ class _FaucetCardState extends State<FaucetCard> with WidgetsBindingObserver {
 
   Future<void> _claim() async {
     final api = widget.api;
-    if (!_canClaim || api == null) return;
+    if (!_canClaim) return;
+    if (!_available || api == null) {
+      final l10n = l10nOf(context);
+      ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+        SnackBar(
+          content: Text(
+            widget.address.isEmpty
+                ? l10n.faucetNeedsWallet
+                : l10n.faucetUnavailable,
+          ),
+        ),
+      );
+      return;
+    }
     final address = widget.address;
     final epoch = ++_epoch;
-    final previous = _balance!;
+    final previous = _balance;
     setState(() {
       _busy = true;
+      _reading = false;
       _claimFailure = null;
     });
     try {
@@ -157,12 +167,13 @@ class _FaucetCardState extends State<FaucetCard> with WidgetsBindingObserver {
           _balance = FaucetBalance(
             balancePradha: result.balancePradha,
             totalClaimedPradha:
-                previous.totalClaimedPradha + result.rewardPradha,
+                (previous?.totalClaimedPradha ?? 0) + result.rewardPradha,
             canClaimToday: false,
             rewardPradha: 0,
             dailyRewardPradha:
-                result.dailyRewardPradha ?? previous.dailyRewardPradha,
+                result.dailyRewardPradha ?? previous?.dailyRewardPradha,
             claimedTodayPradha: result.claimedTodayPradha,
+            rewardModel: result.rewardModel ?? previous?.rewardModel,
           );
         }
       });
@@ -239,6 +250,7 @@ class _FaucetCardState extends State<FaucetCard> with WidgetsBindingObserver {
             rewardPradha: 0,
             dailyRewardPradha: previous.dailyRewardPradha,
             claimedTodayPradha: previous.claimedTodayPradha,
+            rewardModel: previous.rewardModel,
           );
         }
       });
@@ -303,6 +315,9 @@ class _FaucetCardState extends State<FaucetCard> with WidgetsBindingObserver {
   String _withdrawError(AppLocalizations l10n, FaucetWithdrawResult result) {
     final error = result.error ?? '';
     final code = result.errorCode;
+    if (code == 'SmallTransferNotSupported' || error.contains('storage mass')) {
+      return l10n.faucetSmallTransferUnsupported;
+    }
     if (code == 'StorageUnavailable' || error.contains('storage')) {
       return l10n.faucetStorageUnavailable;
     }
@@ -339,10 +354,10 @@ class _FaucetCardState extends State<FaucetCard> with WidgetsBindingObserver {
 
   String _errorText(AppLocalizations l10n, FaucetClaimResult failure) =>
       switch (failure.errorCode ?? failure.error) {
-        'NothingAccrued' || 'nothing accrued yet' => l10n.faucetAlreadyClaimed,
-        'DailyCapReached' ||
+        'NothingAccrued' || 'nothing accrued yet' => l10n.faucetNothingAccrued,
         'AlreadyClaimed' ||
-        'already claimed today' => l10n.faucetDailyCap,
+        'already claimed today' => l10n.faucetAlreadyClaimed,
+        'DailyCapReached' => l10n.faucetDailyCap,
         'ReservoirFull' => l10n.faucetReservoirFull,
         'InvalidAddress' => l10n.faucetInvalidAddress,
         'StorageUnavailable' => l10n.faucetStorageUnavailable,
@@ -360,7 +375,9 @@ class _FaucetCardState extends State<FaucetCard> with WidgetsBindingObserver {
     final String? status = _withdrawNeedsReview
         ? l10n.faucetWithdrawUncertain
         : !_available
-        ? l10n.faucetUnavailable
+        ? (widget.address.isEmpty
+              ? l10n.faucetNeedsWallet
+              : l10n.faucetUnavailable)
         : _failed
         ? l10n.faucetLoadFailed
         : balance == null
@@ -370,9 +387,9 @@ class _FaucetCardState extends State<FaucetCard> with WidgetsBindingObserver {
         : _activating
         ? l10n.faucetActivationInfo
         : capped && !balance.canClaimToday
-        ? l10n.faucetDailyCap
+        ? (_dailyFixed ? l10n.faucetAlreadyClaimed : l10n.faucetDailyCap)
         : balance.rewardPradha == 0 && (quota ?? 0) > 0
-        ? l10n.faucetAlreadyClaimed
+        ? (_dailyFixed ? l10n.faucetNotEligible : l10n.faucetNothingAccrued)
         : !balance.canClaimToday
         ? l10n.faucetNotEligible
         : balance.rewardPradha == null
@@ -408,13 +425,22 @@ class _FaucetCardState extends State<FaucetCard> with WidgetsBindingObserver {
               style: TypeScale.title(context),
             ),
             const SizedBox(height: Palette.md),
-            if (balance.rewardPradha != null)
+            if (_dailyFixed) ...[
               Text(
-                l10n.faucetReady(balance.rewardPradha!),
+                l10n.faucetDailyReward,
                 style: TypeScale.title(context)
                     .copyWith(color: Palette.goldLight),
               ),
-            if (quota != null) ...[
+              const SizedBox(height: Palette.xs),
+            ],
+            if (balance.rewardPradha != null)
+              Text(
+                l10n.faucetReady(balance.rewardPradha!),
+                style: TypeScale.title(context).copyWith(
+                  color: _dailyFixed ? Palette.ink : Palette.goldLight,
+                ),
+              ),
+            if (quota != null && !_dailyFixed) ...[
               const SizedBox(height: Palette.xs),
               Text(l10n.faucetQuota(quota), style: TypeScale.label(context)),
             ],
@@ -460,6 +486,8 @@ class _FaucetCardState extends State<FaucetCard> with WidgetsBindingObserver {
                   ? l10n.faucetClaiming
                   : _activating
                   ? l10n.faucetActivate
+                  : _dailyFixed || balance == null
+                  ? l10n.faucetClaimDaily
                   : l10n.faucetClaim,
               textAlign: TextAlign.center,
             ),
@@ -480,7 +508,12 @@ class _FaucetCardState extends State<FaucetCard> with WidgetsBindingObserver {
             ),
           ),
           const SizedBox(height: Palette.md),
-          Text(l10n.faucetInfo, style: TypeScale.caption(context)),
+          Text(
+            _dailyFixed || balance == null
+                ? l10n.faucetDailyInfo
+                : l10n.faucetInfo,
+            style: TypeScale.caption(context),
+          ),
         ],
       ),
     );
