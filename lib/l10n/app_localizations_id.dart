@@ -579,6 +579,42 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
+  String get faucetClaimToWallet => 'Klaim ke wallet';
+
+  @override
+  String faucetClaimedOnChain(int amount, int fee) {
+    return '$amount pradha dikirim ke wallet. Biaya: $fee pradha, dibayar faucet. Tunggu konfirmasi blockchain.';
+  }
+
+  @override
+  String get faucetPendingOnChain =>
+      'Klaim terakhir masih menunggu. Jangan kirim ulang klaim. Periksa wallet atau hubungi operator dengan TXID ini.';
+
+  @override
+  String get faucetClaimInfoOnChain =>
+      'Klaim mengajukan transaksi ke wallet. Saldo wallet bertambah setelah konfirmasi blockchain. Faucet membayar biaya jaringan.';
+
+  @override
+  String get faucetFundingUnavailable =>
+      'Pool faucet belum memiliki dana untuk pembayaran. Reward tidak dikreditkan. Hubungi operator.';
+
+  @override
+  String get faucetPoolBusy =>
+      'Faucet sedang memproses pembayaran. Tunggu dan perbarui status sebelum klaim lagi.';
+
+  @override
+  String get faucetClaimingOnChain => 'Mengirim klaim…';
+
+  @override
+  String faucetBalanceOnChain(int count) {
+    return 'Reward lama menunggu pembayaran: $count pradha';
+  }
+
+  @override
+  String get faucetTransactionSubmitted =>
+      'Transaksi dikirim. Tunggu konfirmasi blockchain.';
+
+  @override
   String get faucetClaimFailed =>
       'Klaim gagal. Perbarui saldo sebelum mencoba lagi.';
 
@@ -607,12 +643,12 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
+  String get faucetLoading => 'Memuat saldo faucet…';
+
+  @override
   String faucetClaimedToday(int count) {
     return 'Diklaim hari ini: $count pradha';
   }
-
-  @override
-  String get faucetLoading => 'Memuat saldo faucet…';
 
   @override
   String get faucetLoadFailed =>

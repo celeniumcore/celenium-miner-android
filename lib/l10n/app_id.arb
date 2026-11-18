@@ -261,6 +261,17 @@
   "faucetClaim": "Klaim bertahap",
   "faucetClaiming": "Mengklaim…",
   "faucetClaimed": "+{count} pradha diklaim",
+  "faucetClaimToWallet": "Klaim ke wallet",
+  "faucetClaimedOnChain": "{amount} pradha dikirim ke wallet. Biaya: {fee} pradha, dibayar faucet. Tunggu konfirmasi blockchain.",
+  "faucetPendingOnChain": "Klaim terakhir masih menunggu. Jangan kirim ulang klaim. Periksa wallet atau hubungi operator dengan TXID ini.",
+  "faucetClaimInfoOnChain": "Klaim mengajukan transaksi ke wallet. Saldo wallet bertambah setelah konfirmasi blockchain. Faucet membayar biaya jaringan.",
+  "faucetFundingUnavailable": "Pool faucet belum memiliki dana untuk pembayaran. Reward tidak dikreditkan. Hubungi operator.",
+  "faucetPoolBusy": "Faucet sedang memproses pembayaran. Tunggu dan perbarui status sebelum klaim lagi.",
+  "faucetClaimingOnChain": "Mengirim klaim…",
+  "@faucetClaimedOnChain": {"placeholders": {"amount": {"type": "int"}, "fee": {"type": "int"}}},
+  "faucetBalanceOnChain": "Reward lama menunggu pembayaran: {count} pradha",
+  "@faucetBalanceOnChain": {"placeholders": {"count": {"type": "int"}}},
+  "faucetTransactionSubmitted": "Transaksi dikirim. Tunggu konfirmasi blockchain.",
   "@faucetClaimed": {
     "placeholders": {
       "count": {

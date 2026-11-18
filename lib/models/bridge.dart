@@ -354,6 +354,9 @@ class FaucetBalance {
   final int? minWithdrawPradha;
   final int? minRewardPradha;
   final int? maxRewardPradha;
+  final String? claimPayoutMode;
+  final String? lastPayoutTxid;
+  final String? lastPayoutStatus;
 
   const FaucetBalance({
     required this.balancePradha,
@@ -371,6 +374,9 @@ class FaucetBalance {
     this.minWithdrawPradha,
     this.minRewardPradha,
     this.maxRewardPradha,
+    this.claimPayoutMode,
+    this.lastPayoutTxid,
+    this.lastPayoutStatus,
   });
 
   static FaucetBalance? tryParse(Object? json) {
@@ -379,6 +385,17 @@ class FaucetBalance {
     final total = _faucetInt(json['totalClaimedPradha']);
     final can = json['canClaimToday'];
     if (balance == null || total == null || can is! bool) return null;
+    if (json['claimPayoutMode'] != null && json['claimPayoutMode'] is! String) {
+      return null;
+    }
+    if (json['lastPayoutStatus'] != null &&
+        json['lastPayoutStatus'] is! String) {
+      return null;
+    }
+    if (json['lastPayoutTxid'] != null &&
+        _validTxid(json['lastPayoutTxid']) == null) {
+      return null;
+    }
     if (json['canStartDrip'] != null && json['canStartDrip'] is! bool) {
       return null;
     }
@@ -411,6 +428,9 @@ class FaucetBalance {
       minWithdrawPradha: _faucetInt(json['minWithdrawPradha']),
       minRewardPradha: _faucetInt(json['minRewardPradha']),
       maxRewardPradha: _faucetInt(json['maxRewardPradha']),
+      claimPayoutMode: json['claimPayoutMode'] as String?,
+      lastPayoutTxid: _validTxid(json['lastPayoutTxid']),
+      lastPayoutStatus: json['lastPayoutStatus'] as String?,
       rewardModel: json['rewardModel'] is String
           ? json['rewardModel'] as String
           : null,
@@ -421,6 +441,7 @@ class FaucetBalance {
 /// A credited claim delta or a bridge error, including its optional stable code.
 class FaucetClaimResult {
   final int balancePradha;
+  final int? serverBalancePradha;
   final int rewardPradha;
   final int? dailyRewardPradha;
   final int? claimedTodayPradha;
@@ -431,6 +452,13 @@ class FaucetClaimResult {
   final int? minWithdrawPradha;
   final int? minRewardPradha;
   final int? maxRewardPradha;
+  final String? claimPayoutMode;
+  final String? payoutStatus;
+  final String? txid;
+  final String? pendingTxid;
+  final String? lastPayoutTxid;
+  final int? paidPradha;
+  final int? feePradha;
 
   const FaucetClaimResult.success({
     required this.balancePradha,
@@ -442,36 +470,104 @@ class FaucetClaimResult {
     this.minWithdrawPradha,
     this.minRewardPradha,
     this.maxRewardPradha,
+    this.claimPayoutMode,
+    this.payoutStatus,
+    this.txid,
+    this.pendingTxid,
+    this.lastPayoutTxid,
+    this.paidPradha,
+    this.feePradha,
   }) : error = null,
-       errorCode = null;
+       errorCode = null,
+       serverBalancePradha = balancePradha;
 
-  const FaucetClaimResult.failure({required String this.error, this.errorCode})
-    : balancePradha = 0,
-      rewardPradha = 0,
-      dailyRewardPradha = null,
-      claimedTodayPradha = null,
-      startedDrip = null,
-      rewardModel = null,
-      minWithdrawPradha = null,
-      minRewardPradha = null,
-      maxRewardPradha = null;
+  const FaucetClaimResult.failure({
+    required String this.error,
+    this.errorCode,
+    this.claimPayoutMode,
+    this.payoutStatus,
+    this.txid,
+    this.pendingTxid,
+    this.balancePradha = 0,
+    this.serverBalancePradha,
+    this.lastPayoutTxid,
+  }) : rewardPradha = 0,
+       dailyRewardPradha = null,
+       claimedTodayPradha = null,
+       startedDrip = null,
+       rewardModel = null,
+       minWithdrawPradha = null,
+       minRewardPradha = null,
+       maxRewardPradha = null,
+       paidPradha = null,
+       feePradha = null;
 
   bool get ok => error == null;
 
   static FaucetClaimResult? tryParse(Object? json) {
     if (json is! Map<String, dynamic>) return null;
-    final error = json['error'];
-    if (error is String) {
-      return FaucetClaimResult.failure(
-        error: error,
-        errorCode: json['errorCode'] is String
-            ? json['errorCode'] as String
-            : null,
-      );
+    final mode = json['claimPayoutMode'];
+    if (mode != null && mode is! String) return null;
+    final payoutStatus = json['payoutStatus'];
+    if (payoutStatus != null && payoutStatus is! String) return null;
+    final pendingTxid = _validTxid(json['pendingTxid']);
+    final lastPayoutTxid = _validTxid(json['lastPayoutTxid']);
+    if ((json['pendingTxid'] != null && pendingTxid == null) ||
+        (json['lastPayoutTxid'] != null && lastPayoutTxid == null)) {
+      return null;
     }
     final balance = _faucetInt(json['balancePradha']);
+    final error = json['error'];
+    final errorCode = json['errorCode'] is String
+        ? json['errorCode'] as String
+        : null;
+    if (error is String) {
+      final txid = _validTxid(json['txid']);
+      if (json['txid'] != null && txid == null) return null;
+      if (payoutStatus == 'pending' &&
+          errorCode != 'TransferPending' &&
+          !(errorCode == 'StorageUnavailable' &&
+              (pendingTxid != null || txid != null))) {
+        return null;
+      }
+      if (errorCode == 'TransferPending' && payoutStatus != 'pending') {
+        return null;
+      }
+      return FaucetClaimResult.failure(
+        error: error,
+        errorCode: errorCode,
+        claimPayoutMode: mode as String?,
+        payoutStatus: payoutStatus as String?,
+        pendingTxid: pendingTxid,
+        txid: txid,
+        lastPayoutTxid: lastPayoutTxid,
+        serverBalancePradha: balance,
+        balancePradha: balance ?? 0,
+      );
+    }
+    if (json['ok'] != true || payoutStatus == 'pending') return null;
     final reward = _faucetInt(json['rewardPradha']);
-    if (json['ok'] != true || balance == null || reward == null) return null;
+    if (balance == null || reward == null) return null;
+    final txid = _validTxid(json['txid']);
+    final paid = _faucetInt(json['paidPradha']);
+    final fee = _faucetInt(json['feePradha']);
+    if (json['txid'] != null && txid == null) return null;
+    if (json['paidPradha'] != null && paid == null) return null;
+    if (json['feePradha'] != null && fee == null) return null;
+    if (mode == 'on-chain' &&
+        (payoutStatus != 'submitted' ||
+            txid == null ||
+            paid == null ||
+            paid == 0 ||
+            fee == null ||
+            json['minWithdrawPradha'] != 1 ||
+            _faucetInt(json['dailyRewardPradha']) == null ||
+            _faucetInt(json['claimedTodayPradha']) == null ||
+            _faucetInt(json['minRewardPradha']) == null ||
+            _faucetInt(json['maxRewardPradha']) == null ||
+            json['rewardModel'] != 'daily-pool-halving')) {
+      return null;
+    }
     if (json['startedDrip'] != null && json['startedDrip'] is! bool) {
       return null;
     }
@@ -493,9 +589,16 @@ class FaucetClaimResult {
       minWithdrawPradha: _faucetInt(json['minWithdrawPradha']),
       minRewardPradha: _faucetInt(json['minRewardPradha']),
       maxRewardPradha: _faucetInt(json['maxRewardPradha']),
+      claimPayoutMode: mode as String?,
       rewardModel: json['rewardModel'] is String
           ? json['rewardModel'] as String
           : null,
+      payoutStatus: payoutStatus as String?,
+      txid: txid,
+      pendingTxid: pendingTxid,
+      lastPayoutTxid: lastPayoutTxid,
+      paidPradha: paid,
+      feePradha: fee,
     );
   }
 }
@@ -573,6 +676,11 @@ class FaucetWithdrawResult {
       balancePradha: balance,
     );
   }
+}
+
+String? _validTxid(Object? value) {
+  if (value is! String || value.length != 64) return null;
+  return RegExp(r'^[0-9a-fA-F]{64}$').hasMatch(value) ? value : null;
 }
 
 int? _faucetInt(Object? value) {

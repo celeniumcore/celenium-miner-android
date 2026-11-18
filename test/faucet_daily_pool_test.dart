@@ -148,6 +148,71 @@ void main() {
     });
   }
 
+  testWidgets('direct claim shows submitted receipt and skips withdraw', (tester) async {
+    final txid = 'a1' * 32;
+    var posts = 0;
+    var submitted = false;
+    final api = BridgeApi(
+      baseUrl: 'http://fixture.invalid',
+      client: MockClient((request) async {
+        if (request.method == 'POST') {
+          posts++;
+          expect(request.url.path, '/api/faucet/claim');
+          submitted = true;
+          return jsonResponse({
+            'ok': true,
+            'claimPayoutMode': 'on-chain',
+            'payoutStatus': 'submitted',
+            'txid': txid,
+            'paidPradha': 350000,
+            'feePradha': 509,
+            'balancePradha': 0,
+            'rewardPradha': 350000,
+            'dailyRewardPradha': 350000,
+            'claimedTodayPradha': 350000,
+            'minRewardPradha': 100000,
+            'maxRewardPradha': 500000,
+            'rewardModel': 'daily-pool-halving',
+            'minWithdrawPradha': 1,
+          });
+        }
+        return jsonResponse({
+          ...dailyPoolBalanceFixture(
+            claimed: submitted ? 350000 : 0,
+          ),
+          'claimPayoutMode': 'on-chain',
+          'lastPayoutTxid': submitted ? txid : null,
+          'lastPayoutStatus': submitted ? 'submitted' : null,
+        });
+      }),
+    );
+    await tester.pumpWidget(host(api));
+    await settle(tester);
+    expect(find.text('Claim to wallet'), findsOneWidget);
+    expect(find.text('Off-chain balance: 0 pradha'), findsNothing);
+    expect(find.text('Reward lama menunggu pembayaran: 0 pradha'), findsNothing);
+    expect(
+      tester.widget<OutlinedButton>(find.byType(OutlinedButton)).onPressed,
+      isNull,
+    );
+    await tester.tap(find.text('Claim to wallet'));
+    await settle(tester);
+    expect(posts, 1);
+    expect(find.text('350000 pradha submitted to your wallet. Fee: 509 pradha, paid by the faucet. Await blockchain confirmation.'), findsOneWidget);
+    expect(find.text(txid), findsWidgets);
+    expect(find.text('Transaction submitted. Await blockchain confirmation.'), findsOneWidget);
+    expect(find.text('Off-chain balance: 0 pradha'), findsNothing);
+    expect(tester.widget<FilledButton>(find.byType(FilledButton)).onPressed, isNull);
+    await tester.tap(find.text('Close'));
+    await settle(tester);
+    await tester.tap(find.byTooltip('Refresh faucet'));
+    await settle(tester);
+    expect(posts, 1);
+    expect(tester.widget<FilledButton>(find.byType(FilledButton)).onPressed, isNull);
+    expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox());
+  });
+
   testWidgets('withdraw requires the current server minimum', (tester) async {
     var balance = 2499999;
     var minimum = 2500000;

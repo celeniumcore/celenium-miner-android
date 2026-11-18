@@ -1136,6 +1136,60 @@ abstract class AppLocalizations {
   /// **'Claimed +{count} pradha'**
   String faucetClaimed(int count);
 
+  /// No description provided for @faucetClaimToWallet.
+  ///
+  /// In en, this message translates to:
+  /// **'Claim to wallet'**
+  String get faucetClaimToWallet;
+
+  /// No description provided for @faucetClaimedOnChain.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} pradha submitted to your wallet. Fee: {fee} pradha, paid by the faucet. Await blockchain confirmation.'**
+  String faucetClaimedOnChain(int amount, int fee);
+
+  /// No description provided for @faucetPendingOnChain.
+  ///
+  /// In en, this message translates to:
+  /// **'The last claim is still pending. Do not retry or claim again. Check your wallet or contact the operator with this TXID.'**
+  String get faucetPendingOnChain;
+
+  /// No description provided for @faucetClaimInfoOnChain.
+  ///
+  /// In en, this message translates to:
+  /// **'Claim submits a wallet transaction. The wallet balance changes after blockchain confirmation. The faucet pays the network fee.'**
+  String get faucetClaimInfoOnChain;
+
+  /// No description provided for @faucetFundingUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'The faucet pool is not funded for a payout. No reward was credited. Contact the operator.'**
+  String get faucetFundingUnavailable;
+
+  /// No description provided for @faucetPoolBusy.
+  ///
+  /// In en, this message translates to:
+  /// **'The faucet is processing a payout. Wait and refresh before claiming again.'**
+  String get faucetPoolBusy;
+
+  /// No description provided for @faucetClaimingOnChain.
+  ///
+  /// In en, this message translates to:
+  /// **'Submitting claim…'**
+  String get faucetClaimingOnChain;
+
+  /// No description provided for @faucetBalanceOnChain.
+  ///
+  /// In en, this message translates to:
+  /// **'Legacy rewards awaiting payout: {count} pradha'**
+  String faucetBalanceOnChain(int count);
+
+  /// No description provided for @faucetTransactionSubmitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction submitted. Await blockchain confirmation.'**
+  String get faucetTransactionSubmitted;
+
   /// No description provided for @faucetClaimFailed.
   ///
   /// In en, this message translates to:
@@ -1172,17 +1226,17 @@ abstract class AppLocalizations {
   /// **'Daily quota: {count} pradha'**
   String faucetQuota(int count);
 
-  /// No description provided for @faucetClaimedToday.
-  ///
-  /// In en, this message translates to:
-  /// **'Claimed today: {count} pradha'**
-  String faucetClaimedToday(int count);
-
   /// No description provided for @faucetLoading.
   ///
   /// In en, this message translates to:
   /// **'Loading faucet balance…'**
   String get faucetLoading;
+
+  /// No description provided for @faucetClaimedToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Claimed today: {count} pradha'**
+  String faucetClaimedToday(int count);
 
   /// No description provided for @faucetLoadFailed.
   ///

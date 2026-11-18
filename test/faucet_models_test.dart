@@ -2,6 +2,57 @@ import 'package:celenium_miner/models/bridge.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  test('on-chain receipts validate and retain the accepted payment', () {
+    // Sample API receipt; this is not a live-chain transaction.
+    final receipt = <String, Object?>{
+      'ok': true,
+      'claimPayoutMode': 'on-chain',
+      'payoutStatus': 'submitted',
+      'txid': 'a' * 64,
+      'paidPradha': 350000,
+      'feePradha': 275,
+      'balancePradha': 0,
+      'rewardPradha': 350000,
+      'dailyRewardPradha': 350000,
+      'claimedTodayPradha': 350000,
+      'minRewardPradha': 100000,
+      'maxRewardPradha': 500000,
+      'rewardModel': 'daily-pool-halving',
+      'minWithdrawPradha': 1,
+    };
+    for (final field in ['txid', 'paidPradha', 'feePradha', 'payoutStatus']) {
+      expect(
+        FaucetClaimResult.tryParse({...receipt}..remove(field)),
+        isNull,
+        reason: 'Missing $field must not become a legacy credit',
+      );
+    }
+    for (final value in ['', 'g' * 64, 'a' * 63, 7]) {
+      expect(FaucetClaimResult.tryParse({...receipt, 'txid': value}), isNull);
+    }
+    for (final value in [0, -1, 0.5, '350300']) {
+      expect(
+        FaucetClaimResult.tryParse({...receipt, 'paidPradha': value}),
+        isNull,
+      );
+    }
+    for (final status in ['pending', 'confirmed', 'failed']) {
+      expect(
+        FaucetClaimResult.tryParse({...receipt, 'payoutStatus': status}),
+        isNull,
+      );
+    }
+    final dynamic result = FaucetClaimResult.tryParse(receipt);
+    expect(result.ok, isTrue);
+    expect(result.claimPayoutMode, 'on-chain');
+    expect(result.payoutStatus, 'submitted');
+    expect(result.txid, 'a' * 64);
+    expect(result.paidPradha, 350000);
+    expect(result.feePradha, 275);
+    expect(result.balancePradha, 0);
+    expect(result.rewardPradha, 350000);
+  });
+
   test('daily pool bounds and withdrawal minimum come from the bridge', () {
     final balance = FaucetBalance.tryParse({
       'balancePradha': 500000,

@@ -1127,7 +1127,7 @@ class _AboutScreen extends StatelessWidget {
                   Eyebrow(l10n.aboutVersion),
                   const SizedBox(height: Palette.sm),
                   const Text(
-                    '1.0.9',
+                    '1.0.10',
                     style: TextStyle(
                       fontFamily: TypeScale.monoFamily,
                       fontSize: 12,

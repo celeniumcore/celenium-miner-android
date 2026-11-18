@@ -261,6 +261,17 @@
   "faucetClaim": "Claim accrued",
   "faucetClaiming": "Claiming…",
   "faucetClaimed": "Claimed +{count} pradha",
+  "faucetClaimToWallet": "Claim to wallet",
+  "faucetClaimedOnChain": "{amount} pradha submitted to your wallet. Fee: {fee} pradha, paid by the faucet. Await blockchain confirmation.",
+  "faucetPendingOnChain": "The last claim is still pending. Do not retry or claim again. Check your wallet or contact the operator with this TXID.",
+  "faucetClaimInfoOnChain": "Claim submits a wallet transaction. The wallet balance changes after blockchain confirmation. The faucet pays the network fee.",
+  "faucetFundingUnavailable": "The faucet pool is not funded for a payout. No reward was credited. Contact the operator.",
+  "faucetPoolBusy": "The faucet is processing a payout. Wait and refresh before claiming again.",
+  "faucetClaimingOnChain": "Submitting claim…",
+  "@faucetClaimedOnChain": {"placeholders": {"amount": {"type": "int"}, "fee": {"type": "int"}}},
+  "faucetBalanceOnChain": "Legacy rewards awaiting payout: {count} pradha",
+  "@faucetBalanceOnChain": {"placeholders": {"count": {"type": "int"}}},
+  "faucetTransactionSubmitted": "Transaction submitted. Await blockchain confirmation.",
   "@faucetClaimed": {
     "placeholders": {
       "count": {
@@ -297,15 +308,9 @@
       }
     }
   },
-  "faucetClaimedToday": "Claimed today: {count} pradha",
-  "@faucetClaimedToday": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "faucetLoading": "Loading faucet balance…",
+  "faucetClaimedToday": "Claimed today: {count} pradha",
+  "@faucetClaimedToday": {"placeholders": {"count": {"type": "int"}}},
   "faucetLoadFailed": "Could not refresh the faucet balance. Try again.",
   "faucetRefresh": "Refresh faucet",
   "faucetUnavailable": "Connect a bridge to load participation rewards.",

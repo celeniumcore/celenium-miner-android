@@ -578,6 +578,42 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get faucetClaimToWallet => 'Claim to wallet';
+
+  @override
+  String faucetClaimedOnChain(int amount, int fee) {
+    return '$amount pradha submitted to your wallet. Fee: $fee pradha, paid by the faucet. Await blockchain confirmation.';
+  }
+
+  @override
+  String get faucetPendingOnChain =>
+      'The last claim is still pending. Do not retry or claim again. Check your wallet or contact the operator with this TXID.';
+
+  @override
+  String get faucetClaimInfoOnChain =>
+      'Claim submits a wallet transaction. The wallet balance changes after blockchain confirmation. The faucet pays the network fee.';
+
+  @override
+  String get faucetFundingUnavailable =>
+      'The faucet pool is not funded for a payout. No reward was credited. Contact the operator.';
+
+  @override
+  String get faucetPoolBusy =>
+      'The faucet is processing a payout. Wait and refresh before claiming again.';
+
+  @override
+  String get faucetClaimingOnChain => 'Submitting claim…';
+
+  @override
+  String faucetBalanceOnChain(int count) {
+    return 'Legacy rewards awaiting payout: $count pradha';
+  }
+
+  @override
+  String get faucetTransactionSubmitted =>
+      'Transaction submitted. Await blockchain confirmation.';
+
+  @override
   String get faucetClaimFailed =>
       'Claim failed. Refresh the balance before trying again.';
 
@@ -606,12 +642,12 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get faucetLoading => 'Loading faucet balance…';
+
+  @override
   String faucetClaimedToday(int count) {
     return 'Claimed today: $count pradha';
   }
-
-  @override
-  String get faucetLoading => 'Loading faucet balance…';
 
   @override
   String get faucetLoadFailed =>

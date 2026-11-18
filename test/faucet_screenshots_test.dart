@@ -34,6 +34,19 @@ void main() {
       failed: false,
     ),
     (
+      name: 'faucet_direct_claim_submitted_en',
+      locale: 'en',
+      width: 390.0,
+      scale: 1.0,
+      body: {
+        ...dailyPoolBalanceFixture(balance: 0, quota: 350000, claimed: 350000),
+        'claimPayoutMode': 'on-chain',
+        'lastPayoutStatus': 'submitted',
+        'lastPayoutTxid': '0123456789abcdef' * 4,
+      },
+      failed: false,
+    ),
+    (
       name: 'faucet_daily_pool_halved_en',
       locale: 'en',
       width: 390.0,
@@ -118,6 +131,14 @@ void main() {
           return jsonResponse(scenario.body, scenario.failed ? 503 : 200);
         }),
       );
+      if (scenario.name == 'faucet_direct_claim_submitted_en') {
+        final fixture = FaucetBalance.tryParse(
+          Map<String, dynamic>.from(scenario.body),
+        );
+        expect(fixture?.claimPayoutMode, 'on-chain');
+        expect(fixture?.lastPayoutStatus, 'submitted');
+        expect(fixture?.lastPayoutTxid, '0123456789abcdef' * 4);
+      }
       await tester.pumpWidget(
         MaterialApp(
           theme: buildCenTheme(),
@@ -157,6 +178,11 @@ void main() {
         await tester.pump(const Duration(milliseconds: 100));
       }
       expect(tester.takeException(), isNull);
+      if (scenario.name == 'faucet_direct_claim_submitted_en') {
+        expect(find.text('Legacy rewards awaiting payout: 0 pradha'), findsNothing);
+        expect(find.text('Transaction submitted. Await blockchain confirmation.'), findsOneWidget);
+        expect(find.text('Claim to wallet'), findsOneWidget);
+      }
       final card = tester.getRect(find.byType(FaucetCard));
       for (final text
           in find

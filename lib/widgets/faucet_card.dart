@@ -10,7 +10,7 @@ import '../theme/palette.dart';
 import '../theme/typography.dart';
 import 'cen_ui.dart';
 
-/// Claims credit the off-chain balance; withdrawals remain a separate action.
+/// Uses the bridge's payout mode; older bridges retain ledger withdrawals.
 class FaucetCard extends StatefulWidget {
   const FaucetCard({
     super.key,
@@ -36,21 +36,32 @@ class _FaucetCardState extends State<FaucetCard> with WidgetsBindingObserver {
   bool _withdrawNeedsReview = false;
   bool _reading = false;
   bool _failed = false;
+  bool _pendingPayout = false;
+  bool _claimSubmittedToday = false;
+  String? _pendingTxid;
+  String? _claimPayoutMode;
   int _epoch = 0;
 
   bool get _available => widget.api != null && widget.address.isNotEmpty;
   bool get _working => _busy || _withdrawing;
-  int get _minWithdrawPradha => _balance?.minWithdrawPradha ?? 1000;
+  int get _minWithdrawPradha =>
+      _balance?.minWithdrawPradha ?? (_directClaim ? 1 : 1000);
   bool get _canWithdraw =>
       !_working &&
       !_reading &&
       !_failed &&
       !_withdrawNeedsReview &&
+      !_pendingPayout &&
       _available &&
       _balance != null &&
       _balance!.balancePradha >= _minWithdrawPradha;
-  bool get _canClaim => !_working;
+  bool get _canClaim => !_working && !_pendingClaim && !_claimSubmittedToday;
 
+  bool get _directClaim =>
+      _claimPayoutMode == 'on-chain' ||
+      _balance?.claimPayoutMode == 'on-chain' ||
+      _claimFailure?.claimPayoutMode == 'on-chain';
+  bool get _pendingClaim => _pendingPayout;
   bool get _dailyPool => _balance?.rewardModel == 'daily-pool-halving';
   bool get _dailyFixed => _balance?.rewardModel == 'daily-fixed';
   bool get _daily => _dailyPool || _balance?.rewardModel == 'daily-fixed';
@@ -79,6 +90,10 @@ class _FaucetCardState extends State<FaucetCard> with WidgetsBindingObserver {
       _withdrawNeedsReview = false;
       _reading = false;
       _failed = false;
+      _pendingPayout = false;
+      _claimSubmittedToday = false;
+      _pendingTxid = null;
+      _claimPayoutMode = null;
       _startPolling();
       _refresh();
     }
@@ -120,11 +135,36 @@ class _FaucetCardState extends State<FaucetCard> with WidgetsBindingObserver {
       if (!mounted || epoch != _epoch) return;
       setState(() {
         _failed = balance == null;
-        if (balance != null) {
-          _balance = balance;
-          if (balance.canClaimToday || balance.canStartDrip == true) {
-            _claimFailure = null;
-          }
+        if (balance == null) return;
+        final serverPending = balance.lastPayoutStatus == 'pending';
+        final serverSubmitted =
+            balance.lastPayoutStatus == 'submitted' &&
+            balance.lastPayoutTxid != null;
+        if (serverPending) {
+          _pendingPayout = true;
+          _pendingTxid = balance.lastPayoutTxid ?? _pendingTxid;
+        } else if (serverSubmitted) {
+          _pendingPayout = false;
+          _pendingTxid = null;
+          _claimSubmittedToday = (balance.claimedTodayPradha ?? 0) > 0;
+        } else if (balance.claimedTodayPradha == 0) {
+          _claimSubmittedToday = false;
+        }
+        _claimPayoutMode = balance.claimPayoutMode ?? _claimPayoutMode;
+        _balance = balance;
+        if (_pendingPayout) {
+          _claimFailure = FaucetClaimResult.failure(
+            error: 'transfer pending',
+            errorCode: 'TransferPending',
+            claimPayoutMode: 'on-chain',
+            payoutStatus: 'pending',
+            pendingTxid: _pendingTxid,
+            lastPayoutTxid: _pendingTxid,
+          );
+        } else if (serverSubmitted ||
+            (!_directClaim &&
+                (balance.canClaimToday || balance.canStartDrip == true))) {
+          _claimFailure = null;
         }
       });
     } on Object {
@@ -164,10 +204,44 @@ class _FaucetCardState extends State<FaucetCard> with WidgetsBindingObserver {
       final result = await api.claimFaucet(address, deviceId);
       if (!mounted || epoch != _epoch) return;
       final l10n = l10nOf(context);
+      final direct = _directClaim || result.claimPayoutMode == 'on-chain';
+      final receiptTxid = result.txid ?? result.pendingTxid;
+      final needsReview = !result.ok &&
+          (result.payoutStatus == 'pending' || receiptTxid != null);
       setState(() {
         _claimFailure = result.ok ? null : result;
-        if (result.ok) {
-          // Do not reuse a pre-claim delta while the follow-up read is pending.
+        if (direct) {
+          _claimPayoutMode = 'on-chain';
+          _pendingPayout = needsReview;
+          _pendingTxid = needsReview ? receiptTxid : null;
+          _claimSubmittedToday = result.ok;
+          _withdrawNeedsReview = needsReview;
+          if (result.ok || result.serverBalancePradha != null) {
+            _balance = FaucetBalance(
+              balancePradha: result.serverBalancePradha ??
+                  previous?.balancePradha ?? 0,
+              totalClaimedPradha: (previous?.totalClaimedPradha ?? 0) +
+                  (result.ok ? result.rewardPradha : 0),
+              canClaimToday: false,
+              rewardPradha: 0,
+              rewardModel: result.rewardModel ?? previous?.rewardModel,
+              dailyRewardPradha:
+                  result.dailyRewardPradha ?? previous?.dailyRewardPradha,
+              claimedTodayPradha:
+                  result.claimedTodayPradha ?? previous?.claimedTodayPradha,
+              minWithdrawPradha: result.minWithdrawPradha ?? 1,
+              minRewardPradha:
+                  result.minRewardPradha ?? previous?.minRewardPradha,
+              maxRewardPradha:
+                  result.maxRewardPradha ?? previous?.maxRewardPradha,
+              claimPayoutMode: 'on-chain',
+              lastPayoutTxid: receiptTxid ?? previous?.lastPayoutTxid,
+              lastPayoutStatus: receiptTxid != null
+                  ? (result.ok ? 'submitted' : 'pending')
+                  : previous?.lastPayoutStatus,
+            );
+          }
+        } else if (result.ok) {
           _balance = FaucetBalance(
             balancePradha: result.balancePradha,
             totalClaimedPradha:
@@ -187,17 +261,36 @@ class _FaucetCardState extends State<FaucetCard> with WidgetsBindingObserver {
           );
         }
       });
-      ScaffoldMessenger.maybeOf(context)?.showSnackBar(
-        SnackBar(
-          content: Text(
-            result.ok
-                ? (result.startedDrip == true && result.rewardPradha == 0
-                      ? l10n.faucetActivated
-                      : l10n.faucetClaimed(result.rewardPradha))
-                : _errorText(l10n, result),
+      if (needsReview && receiptTxid != null) {
+        await _showClaimReceipt(
+          title: l10n.faucetWithdrawReview,
+          message: l10n.faucetPendingOnChain,
+          txid: receiptTxid,
+        );
+        if (mounted && epoch == _epoch) widget.onWithdrawn?.call();
+      } else if (result.ok && result.claimPayoutMode == 'on-chain') {
+        await _showClaimReceipt(
+          title: l10n.faucetWithdrawSubmitted,
+          message: l10n.faucetClaimedOnChain(
+            result.paidPradha!,
+            result.feePradha!,
           ),
-        ),
-      );
+          txid: result.txid!,
+        );
+        if (mounted && epoch == _epoch) widget.onWithdrawn?.call();
+      } else {
+        ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+          SnackBar(
+            content: Text(
+              result.ok
+                  ? (result.startedDrip == true && result.rewardPradha == 0
+                        ? l10n.faucetActivated
+                        : l10n.faucetClaimed(result.rewardPradha))
+                  : _errorText(l10n, result),
+            ),
+          ),
+        );
+      }
       await _refresh();
     } on Object {
       if (!mounted || epoch != _epoch) return;
@@ -209,6 +302,35 @@ class _FaucetCardState extends State<FaucetCard> with WidgetsBindingObserver {
       if (mounted && epoch == _epoch) setState(() => _busy = false);
     }
   }
+
+  Future<void> _showClaimReceipt({
+    required String title,
+    required String message,
+    required String txid,
+  }) => showDialog<void>(
+    context: context,
+    builder: (dialogContext) => AlertDialog(
+      title: Text(title),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(message),
+            const SizedBox(height: Palette.md),
+            const Text('TXID'),
+            SelectableText(txid, style: TypeScale.mono(dialogContext)),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(dialogContext),
+          child: Text(l10nOf(dialogContext).faucetClose),
+        ),
+      ],
+    ),
+  );
 
   Future<void> _withdraw() async {
     if (!_canWithdraw) return;
@@ -369,6 +491,12 @@ class _FaucetCardState extends State<FaucetCard> with WidgetsBindingObserver {
 
   String _errorText(AppLocalizations l10n, FaucetClaimResult failure) =>
       switch (failure.errorCode ?? failure.error) {
+        'FundingUnavailable' || 'ReservoirUnfunded' =>
+          l10n.faucetFundingUnavailable,
+        'TransferPending' => l10n.faucetPendingOnChain,
+        'SmallTransferNotSupported' || 'TransferPreparationFailed' =>
+          l10n.faucetSmallTransferUnsupported,
+        'NotConfigured' => l10n.faucetWithdrawNotConfigured,
         'NothingAccrued' || 'nothing accrued yet' =>
           _daily ? l10n.faucetNotEligible : l10n.faucetNothingAccrued,
         'AlreadyClaimed' ||
@@ -388,7 +516,7 @@ class _FaucetCardState extends State<FaucetCard> with WidgetsBindingObserver {
     final claimed = balance?.claimedTodayPradha;
     final capped =
         quota != null && quota > 0 && claimed != null && claimed >= quota;
-    final String? status = _withdrawNeedsReview
+    final String? status = _withdrawNeedsReview && !_directClaim
         ? l10n.faucetWithdrawUncertain
         : !_available
         ? (widget.address.isEmpty
@@ -434,12 +562,18 @@ class _FaucetCardState extends State<FaucetCard> with WidgetsBindingObserver {
               ),
             ],
           ),
-          if (balance != null) ...[
+          if (balance != null &&
+              (!_directClaim ||
+                  balance.balancePradha > 0 ||
+                  balance.lastPayoutTxid != null)) ...[
             const SizedBox(height: Palette.sm),
-            Text(
-              l10n.faucetBalance(balance.balancePradha),
-              style: TypeScale.title(context),
-            ),
+            if (!_directClaim || balance.balancePradha > 0)
+              Text(
+                _directClaim
+                    ? l10n.faucetBalanceOnChain(balance.balancePradha)
+                    : l10n.faucetBalance(balance.balancePradha),
+                style: TypeScale.title(context),
+              ),
             const SizedBox(height: Palette.md),
             if (_daily && quota != null) ...[
               Text(
@@ -449,7 +583,22 @@ class _FaucetCardState extends State<FaucetCard> with WidgetsBindingObserver {
               ),
               const SizedBox(height: Palette.xs),
             ],
-            if (balance.rewardPradha != null)
+            if (_directClaim && balance.lastPayoutTxid != null) ...[
+              const SizedBox(height: Palette.md),
+              Text(
+                balance.lastPayoutStatus == 'pending'
+                    ? l10n.faucetPendingOnChain
+                    : l10n.faucetTransactionSubmitted,
+                style: TypeScale.label(context),
+              ),
+              const SizedBox(height: Palette.xs),
+              const Text('TXID'),
+              SelectableText(
+                balance.lastPayoutTxid!,
+                style: TypeScale.mono(context),
+              ),
+            ],
+            if (!_directClaim && balance.rewardPradha != null)
               Text(
                 l10n.faucetReady(balance.rewardPradha!),
                 style: TypeScale.title(context)
@@ -459,7 +608,7 @@ class _FaucetCardState extends State<FaucetCard> with WidgetsBindingObserver {
               const SizedBox(height: Palette.xs),
               Text(l10n.faucetQuota(quota), style: TypeScale.label(context)),
             ],
-            if (claimed != null) ...[
+            if (claimed != null && !_directClaim) ...[
               const SizedBox(height: Palette.xs),
               Text(
                 l10n.faucetClaimedToday(claimed),
@@ -510,7 +659,11 @@ class _FaucetCardState extends State<FaucetCard> with WidgetsBindingObserver {
             ),
             child: Text(
               _busy
-                  ? l10n.faucetClaiming
+                  ? (_directClaim
+                        ? l10n.faucetClaimingOnChain
+                        : l10n.faucetClaiming)
+                  : _directClaim
+                  ? l10n.faucetClaimToWallet
                   : _activating
                   ? l10n.faucetActivate
                   : _daily || balance == null
@@ -521,7 +674,7 @@ class _FaucetCardState extends State<FaucetCard> with WidgetsBindingObserver {
           ),
           const SizedBox(height: Palette.md),
           OutlinedButton(
-            onPressed: _canWithdraw ? _withdraw : null,
+            onPressed: !_directClaim && _canWithdraw ? _withdraw : null,
             style: OutlinedButton.styleFrom(
               side: const BorderSide(color: Palette.slate),
               padding: const EdgeInsets.symmetric(
@@ -536,7 +689,9 @@ class _FaucetCardState extends State<FaucetCard> with WidgetsBindingObserver {
           ),
           const SizedBox(height: Palette.md),
           Text(
-            _dailyPool
+            _directClaim
+                ? l10n.faucetClaimInfoOnChain
+                : _dailyPool
                 ? l10n.faucetDailyPoolInfo(_minWithdrawPradha)
                 : _daily || balance == null
                 ? l10n.faucetDailyInfo(_minWithdrawPradha)
