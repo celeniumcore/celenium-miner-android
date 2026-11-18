@@ -1,120 +1,98 @@
-# Celenium Android Miner (MVP)
+# Celenium Miner
 
-Miner Android untuk Celenium (CEN). Catatan realistis: mining PoW berat di HP
-sangat tidak efisien. Untuk itu Android berperan sebagai **pool client ringan**
- yang connect ke stratum bridge, bukan miner berat.
+A Flutter companion application for the Celenium (CEN) network. It brings wallet access, participation claims, bridge status, and an Android mining worker into one application, with English and Indonesian interfaces.
 
-## Arsitektur
+Celenium uses a separate chain and address namespace. Its network software is a fork of [Kaspa's rusty-kaspa](https://github.com/kaspanet/rusty-kaspa). This application connects to Celenium; it is not an official Kaspa wallet or miner.
 
-Android app --> stratum (TCP) / HTTP API bridge --> celeniumd --> blockchain CEN
+## What the application does
 
-## Aturan khusus Android (sesuai spesifikasi)
+- **Wallet:** Creates or imports a recovery phrase and uses the same derived address for the wallet and mining payout destination.
+- **Participation claims:** Reads the bridge's payout mode, submits eligible daily claims, and displays transaction receipts. An older bridge can still expose the separate off-chain claim and withdrawal flow.
+- **Android mining:** Connects to the Stratum pool and uses the bundled native kHeavyHash library. Sessions stop at the configured 12-hour limit and require a new start.
+- **Bridge status:** Displays the worker, share, and balance responses returned by the configured bridge.
+- **Language:** Supports English, Indonesian, and a system-language option.
 
-1. Reward Android maksimal 40% dari reward desktop pada hashrate yang sama
-   (dilaksanakan di sisi bridge via penanda worker).
-2. 1 alamat IP hanya boleh memegang 1 sesi mining Android aktif
-   (rate-limit di bridge; koneksi ganda dari IP sama ditolak).
+The Flutter shell also has desktop targets. Native mining availability depends on the libraries packaged for the target platform; an Android mining feature must not be assumed to work in a desktop build.
 
-## Fitur MVP
+## Shares, claims, and wallet balance
 
-- Input / QR scan wallet address CEN (`cen69*`)
-- Connect ke server bridge (host:port dari settings)
-- Tampilkan hashrate, share accepted, estimated reward
-- 1 sesi per IP (otomatis diputus bila koneksi ganda terdeteksi)
+These values describe different stages:
 
-## Stack
+- **Accepted shares:** Pool submissions accepted during a mining session. They do not establish a confirmed coin payment.
+- **Participation balance:** The bridge's accounting for rewards awaiting payment. It is not the wallet's on-chain balance.
+- **Submitted transaction:** A payment receipt with a TXID. Submission is distinct from blockchain confirmation.
+- **Wallet balance:** The balance returned by the node-backed API for the wallet address.
 
-Flutter (Dart), klien TCP/HTTP, ZXing (QR). Tanpa native mining library pada
-MVP ini (jujur: pool client).
+Direct claims require verified faucet funding and a transaction that passes the node's validation rules. An empty pool, uncertain submission, or failed API call must not be presented as a successful payment. General worker PPLNS settlement is separate from the direct-claim feature.
 
+Mining on a phone consumes power and can generate heat. This application makes no profitability or guaranteed-reward promise.
 
-## Bahasa aplikasi (EN / ID)
+## Connections
 
-Satu APK memuat dua bahasa: **Inggris** dan **Indonesia**. Tidak ada APK
-terpisah — bahasa dipilih di dalam app lewat **Profil → Bahasa → Ikuti sistem /
-English / Bahasa Indonesia**, atau dari setelan HP (Android 13+:
-Setelan → Sistem → Bahasa → Bahasa aplikasi). Pilihan disimpan dan langsung
-berlaku tanpa restart.
+The default HTTP API is `https://celenium.web.id/bridge`. The Android mining worker connects separately to `celenium.web.id:5556`.
 
-- "Ikuti sistem" mengikuti bahasa HP. Agar Android 13+ menampilkan pilihan
-  bahasa app di Setelan, locale didaftarkan di
-  `android/app/src/main/res/xml/locales_config.xml` (dirujuk manifest lewat
-  `android:localeConfig`).
-- Teks hidup di `lib/l10n/app_en.arb` dan `lib/l10n/app_id.arb`; kode Dart-nya
-  di-generate saat build (`flutter gen-l10n`, aturannya di `l10n.yaml`), jadi
-  tidak pernah diedit manual.
-- Menambah bahasa ketiga: buat `lib/l10n/app_<kode>.arb`, tambahkan kode itu di
-  `locales_config.xml`, build ulang. Tidak ada tempat lain yang perlu diubah.
-- Fungsi terjemahan dipanggil lewat `l10nOf(context)` (`lib/l10n/l10n.dart`);
-  tanpa delegate (mis. widget test yang memasang `MaterialApp` polos) hasilnya
-  jatuh ke bahasa Inggris, bukan error.
+A custom bridge URL can be configured in the application. API availability, a funded faucet, and a synced node are operational conditions, not properties guaranteed by installing the APK.
 
-## Build aplikasi (status 5 Nov 2026)
-
-Source aplikasi Flutter `celenium_miner` ada di folder ini (desktop + Android
-satu codebase). APK rilis 5 Nov 2026 sudah memuat AdMob dan dua bahasa:
-
-- `Celenium-Miner-arm64.apk` — sha256 `65005449…93bd` (23,1 MB)
-- `Celenium-Miner-armeabi-v7a.apk` — sha256 `f07aaf88…a330` (20,7 MB)
-- `Celenium-Miner-x86_64.apk` — sha256 `2c1db276…39d1` (24,6 MB)
-
-Berkasnya ada di `~/celenium-web/apk/` dan salinannya di
-`build/app/outputs/flutter-apk/`. Build ulang:
-
-```bash
-~/flutter-install/flutter/bin/flutter build apk --release --split-per-abi
+```text
+Flutter application
+  -> HTTPS bridge API -> node-backed wallet and claim responses
+  -> Stratum TCP pool -> mining jobs and share submissions
 ```
 
-Periksa isi APK tanpa memasangnya ke HP — memastikan App ID AdMob, kelas SDK,
-unit banner live, dan teks dua bahasa benar-benar ikut terpaket:
+## Wallet data and trust
+
+The recovery phrase is generated on first use or imported by the user, then stored through `flutter_secure_storage`. The mining worker resolves its wallet from that same phrase; the older Android-ID-derived wallet helper is not the current wallet creation path.
+
+Back up the recovery phrase before changing devices or reinstalling. Preserve the established signing certificate for Android updates. If Android rejects an update as a version downgrade, compare the installed and downloaded manifest version codes and use the matching ABI variant; do not uninstall a real wallet app as the first fix.
+
+The current send API supplies `privateKeyHex` to the configured bridge for signing. Use only a bridge operator you trust and review [the API implementation](lib/services/bridge_api.dart) before using this wallet for funds. Do not describe this path as signing exclusively on the device.
+
+Never commit recovery phrases, wallet keys, access tokens, signing keystores, or environment secrets.
+
+## Build and verify
+
+Install the Flutter SDK and Android tooling required by [pubspec.yaml](pubspec.yaml) and the Android project configuration. The current application version is `1.0.10+9010`.
 
 ```bash
+flutter pub get
+flutter gen-l10n
+flutter test
+flutter analyze
+flutter build apk --release
+flutter build apk --release --split-per-abi
+```
+
+Build outputs are written under `build/app/outputs/flutter-apk/`. Preserve the existing signing setup when producing an update for an installed wallet.
+
+The project includes an APK content checker:
+
+```bash
+python3 tool/verify_apk.py build/app/outputs/flutter-apk/app-release.apk
 python3 tool/verify_apk.py build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
 ```
 
-Catatan mesin: `android/gradle.properties` sengaja dipasang `-Xmx3G` (bukan
-`-Xmx8G` bawaan template Flutter) karena RAM WSL2 di sini hanya 8 GB. Dengan
-8 GB heap, R8 menukar memori ke swap dan satu build bisa makan 45 menit;
-dengan 3 GB build selesai ~5 menit.
+That checker currently reads the ARM64 AOT library. For an ARMv7 or x86_64 split, inspect the actual `lib/<abi>/libapp.so` and apply the same manifest, locale, and packaged-content checks. A successful build or content check does not replace an installation and interaction test.
 
-Koneksi app = HTTP API stratum-bridge. Bawaan memakai bridge mainnet
-`https://celenium.web.id/bridge`, jadi angka saldo dan daftar worker muncul
-tanpa disetel dulu; alamat kustom (mis. LAN) tetap bisa dipasang di tab Bridge.
-Instalasi lama yang menyimpan `http://5.178.98.100:3031` dimigrasikan ke URL
-publik saat dibuka. Menambang tidak bergantung pada alamat API ini; pool stratum
-memakai `celenium.web.id:5556` dari `lib/services/mining_engine.dart`. Aturan khusus Android
-dari spesifikasi (reward maks 40% dan 1 IP = 1 sesi) ditegakkan di sisi bridge,
-bukan di app.
+## Source map
 
-### Signing rilis — jangan ganti keystore-nya
+- [Mining engine](lib/services/mining_engine.dart): Pool endpoint, session limit, and wallet resolution.
+- [Native miner bindings](lib/services/miner_native.dart): FFI interface to the bundled hashing library.
+- [Bridge client](lib/services/bridge_api.dart): HTTP requests and transaction API calls.
+- [Response models](lib/models/bridge.dart): Validation of balances and claim receipts.
+- [Participation card](lib/widgets/faucet_card.dart): Claim states, error feedback, and receipts.
+- [Wallet derivation](lib/services/cen_wallet.dart) and [secure storage](lib/services/keystore.dart).
+- [Android manifest](android/app/src/main/AndroidManifest.xml): Permissions, service declarations, and application metadata.
 
-Setiap APK rilis ditandatangani `~/.android/debug.keystore` (salinan aman ada
-di brankas `E:\Coding\cenium-keys\celenium-miner-signing.keystore`). Alasannya
-bukan malas bikin keystore rilis, melainkan:
+## Localization
 
-- Alamat payout tiap HP diturunkan dari `android-id:<ANDROID_ID>`
-  (`lib/services/device_identity.dart`).
-- Sejak Android 8 `ANDROID_ID` di-scope ke **sertifikat penandatangan + user +
-  perangkat**. Ganti sertifikat → Android ID berubah → alamat wallet berubah →
-  saldo hasil mining di alamat lama tidak bisa dijangkau lagi dari HP.
+Text lives in `lib/l10n/app_en.arb` and `lib/l10n/app_id.arb`. Regenerate `app_localizations*.dart` with `flutter gen-l10n`; do not edit generated localization files by hand.
 
-Jadi sampai ada fitur export/import kunci wallet, build berikutnya wajib
-memakai keystore yang sama.
+Application language is selected under Profile / Language or the corresponding Android application-language setting where supported. The Android locale configuration is declared in `android/app/src/main/res/xml/locales_config.xml`.
 
-### Background 24 jam (rilis 1.0.4, 11 Nov 2026)
+## Attribution and contributions
 
-Sesi mining pernah mati di tengah malam karena Android 15 membatasi foreground
-service bertipe `dataSync` maksimal 6 jam. Perbaikannya, semuanya harus
-konsisten satu sama lain:
+Celenium development is maintained by [Dimas A. Pradana (`dimas405`)](https://github.com/dimas405). The repository retains the real author history of its changes.
 
-- `<service android:foregroundServiceType="specialUse">` + `<property
-  android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE">` di
-  `AndroidManifest.xml`, permission `FOREGROUND_SERVICE_SPECIAL_USE`.
-- `serviceTypes: [ForegroundServiceTypes.specialUse]` di
-  `lib/services/mining_engine.dart` — Android menolak tipe runtime yang tidak
-  dideklarasikan manifest, jadi dua tempat ini tidak boleh beda.
-- `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` + dialog exemption
-  (`lib/services/battery_guard.dart`) supaya Doze tidak menidurkan worker.
-- `autoRunOnBoot` / `autoRunOnMyPackageReplaced` di
-  `lib/services/mining_service.dart` supaya sesi hidup lagi setelah reboot
-  atau update aplikasi.
+The Celenium network builds on [kaspanet/rusty-kaspa](https://github.com/kaspanet/rusty-kaspa). Credit for that upstream code belongs to the [Kaspa developers and contributors](https://github.com/kaspanet/rusty-kaspa/graphs/contributors). This attribution does not imply that they maintain or endorse Celenium or this Flutter application.
+
+Contributions should include a reproducible issue or a scoped change with test evidence. Keep attribution tied to actual work.
