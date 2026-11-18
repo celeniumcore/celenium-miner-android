@@ -586,22 +586,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Today\'s reward is already claimed. Claim again after 00:00 UTC tomorrow.';
 
   @override
-  String get faucetNothingAccrued =>
-      'Nothing accrued yet. Rewards build up over 24 hours.';
-
-  @override
-  String get faucetClaimDaily => 'Claim daily reward';
-
-  @override
-  String get faucetDailyReward => '1000 pradha per UTC day';
-
-  @override
-  String get faucetDailyInfo =>
-      'Claim 1000 pradha per UTC day, available immediately. Claims credit your off-chain balance. Withdrawals to your wallet require at least 1000 pradha and are 1 hour apart. The faucet must have on-chain funds and pays the network fee.';
-
-  @override
-  String get faucetInfo =>
-      'Claims credit your off-chain balance. Withdraw to your wallet to move it on-chain, minimum 1000 pradha. The faucet pays network fees. Withdrawals are 1 hour apart. Rewards accrue from 00:00 UTC.';
+  String faucetInfo(int minimum) {
+    return 'Claims credit your off-chain balance. Withdraw to your wallet to move it on-chain, minimum $minimum pradha. The faucet pays network fees. Withdrawals are 1 hour apart. Rewards accrue from 00:00 UTC.';
+  }
 
   @override
   String faucetBalance(int count) {
@@ -636,10 +623,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get faucetUnavailable =>
       'Connect a bridge to load participation rewards.';
-
-  @override
-  String get faucetNeedsWallet =>
-      'Create or import a wallet before claiming rewards.';
 
   @override
   String get faucetNotEligible =>
@@ -703,10 +686,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'The faucet has no on-chain funds yet. Your reward balance is unchanged. Contact the operator.';
 
   @override
-  String get faucetSmallTransferUnsupported =>
-      'The node cannot process this small withdrawal yet. Your reward balance is unchanged. Contact the operator.';
-
-  @override
   String get faucetWithdrawNotConfigured =>
       'Withdrawals are not configured. Contact the operator.';
 
@@ -755,4 +734,39 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get faucetLegacyReady =>
       'A claim is available. The bridge will confirm the amount.';
+
+  @override
+  String get faucetNothingAccrued =>
+      'Nothing accrued yet. Rewards build up over 24 hours.';
+
+  @override
+  String get faucetClaimDaily => 'Claim daily reward';
+
+  @override
+  String faucetDailyReward(int count) {
+    return '$count pradha per UTC day';
+  }
+
+  @override
+  String faucetDailyPoolBounds(int minimum, int maximum) {
+    return 'Current reward bounds: $minimum to $maximum pradha, subject to available funds.';
+  }
+
+  @override
+  String faucetDailyPoolInfo(int minimum) {
+    return 'Claim once per UTC day. Today\'s quota depends on the funded daily pool and yesterday\'s claimants. Reward bounds halve every 48 consensus months (4 nominal years). Claims accumulate off-chain; withdraw to your wallet from $minimum pradha. Withdrawals are 1 hour apart; the faucet pays the network fee.';
+  }
+
+  @override
+  String faucetDailyInfo(int minimum) {
+    return 'Claim $minimum pradha per UTC day, available immediately. Claims credit your off-chain balance. Withdrawals to your wallet require at least $minimum pradha and are 1 hour apart. The faucet must have on-chain funds and pays the network fee.';
+  }
+
+  @override
+  String get faucetNeedsWallet =>
+      'Create or import a wallet before claiming rewards.';
+
+  @override
+  String get faucetSmallTransferUnsupported =>
+      'The node cannot process this small withdrawal yet. Your reward balance is unchanged. Contact the operator.';
 }

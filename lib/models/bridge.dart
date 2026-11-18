@@ -351,6 +351,9 @@ class FaucetBalance {
   final bool? canStartDrip;
   final int? pendingPreviousPradha;
   final String? rewardModel;
+  final int? minWithdrawPradha;
+  final int? minRewardPradha;
+  final int? maxRewardPradha;
 
   const FaucetBalance({
     required this.balancePradha,
@@ -365,6 +368,9 @@ class FaucetBalance {
     this.canStartDrip,
     this.pendingPreviousPradha,
     this.rewardModel,
+    this.minWithdrawPradha,
+    this.minRewardPradha,
+    this.maxRewardPradha,
   });
 
   static FaucetBalance? tryParse(Object? json) {
@@ -384,6 +390,9 @@ class FaucetBalance {
       'serverTimeSecs',
       'dripDurationSecs',
       'pendingPreviousPradha',
+      'minWithdrawPradha',
+      'minRewardPradha',
+      'maxRewardPradha',
     ])) {
       return null;
     }
@@ -399,6 +408,9 @@ class FaucetBalance {
       dripDurationSecs: _faucetInt(json['dripDurationSecs']),
       canStartDrip: json['canStartDrip'] as bool?,
       pendingPreviousPradha: _faucetInt(json['pendingPreviousPradha']),
+      minWithdrawPradha: _faucetInt(json['minWithdrawPradha']),
+      minRewardPradha: _faucetInt(json['minRewardPradha']),
+      maxRewardPradha: _faucetInt(json['maxRewardPradha']),
       rewardModel: json['rewardModel'] is String
           ? json['rewardModel'] as String
           : null,
@@ -416,6 +428,9 @@ class FaucetClaimResult {
   final String? errorCode;
   final bool? startedDrip;
   final String? rewardModel;
+  final int? minWithdrawPradha;
+  final int? minRewardPradha;
+  final int? maxRewardPradha;
 
   const FaucetClaimResult.success({
     required this.balancePradha,
@@ -424,6 +439,9 @@ class FaucetClaimResult {
     this.claimedTodayPradha,
     this.startedDrip,
     this.rewardModel,
+    this.minWithdrawPradha,
+    this.minRewardPradha,
+    this.maxRewardPradha,
   }) : error = null,
        errorCode = null;
 
@@ -433,7 +451,10 @@ class FaucetClaimResult {
       dailyRewardPradha = null,
       claimedTodayPradha = null,
       startedDrip = null,
-      rewardModel = null;
+      rewardModel = null,
+      minWithdrawPradha = null,
+      minRewardPradha = null,
+      maxRewardPradha = null;
 
   bool get ok => error == null;
 
@@ -457,6 +478,9 @@ class FaucetClaimResult {
     if (!_validOptionalFaucetInts(json, const [
       'dailyRewardPradha',
       'claimedTodayPradha',
+      'minWithdrawPradha',
+      'minRewardPradha',
+      'maxRewardPradha',
     ])) {
       return null;
     }
@@ -466,6 +490,9 @@ class FaucetClaimResult {
       dailyRewardPradha: _faucetInt(json['dailyRewardPradha']),
       claimedTodayPradha: _faucetInt(json['claimedTodayPradha']),
       startedDrip: json['startedDrip'] as bool?,
+      minWithdrawPradha: _faucetInt(json['minWithdrawPradha']),
+      minRewardPradha: _faucetInt(json['minRewardPradha']),
+      maxRewardPradha: _faucetInt(json['maxRewardPradha']),
       rewardModel: json['rewardModel'] is String
           ? json['rewardModel'] as String
           : null,

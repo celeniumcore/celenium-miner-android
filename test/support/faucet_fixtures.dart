@@ -40,5 +40,23 @@ Map<String, Object> dailyBalanceFixture({
   'canStartDrip': false,
 };
 
+Map<String, Object> dailyPoolBalanceFixture({
+  int balance = 0,
+  int quota = 350000,
+  int claimed = 0,
+  int minWithdraw = 2500000,
+  int minReward = 100000,
+  int maxReward = 500000,
+}) => {
+  ...dailyBalanceFixture(balance: balance, reward: claimed > 0 ? 0 : quota),
+  'rewardModel': 'daily-pool-halving',
+  'dripModel': 'daily-pool-halving',
+  'dailyRewardPradha': quota,
+  'claimedTodayPradha': claimed,
+  'minWithdrawPradha': minWithdraw,
+  'minRewardPradha': minReward,
+  'maxRewardPradha': maxReward,
+};
+
 http.Response jsonResponse(Object body, [int status = 200]) =>
     http.Response(jsonEncode(body), status);

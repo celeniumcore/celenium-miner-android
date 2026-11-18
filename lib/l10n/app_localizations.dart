@@ -1148,35 +1148,11 @@ abstract class AppLocalizations {
   /// **'Today\'s reward is already claimed. Claim again after 00:00 UTC tomorrow.'**
   String get faucetAlreadyClaimed;
 
-  /// No description provided for @faucetNothingAccrued.
-  ///
-  /// In en, this message translates to:
-  /// **'Nothing accrued yet. Rewards build up over 24 hours.'**
-  String get faucetNothingAccrued;
-
-  /// No description provided for @faucetClaimDaily.
-  ///
-  /// In en, this message translates to:
-  /// **'Claim daily reward'**
-  String get faucetClaimDaily;
-
-  /// No description provided for @faucetDailyReward.
-  ///
-  /// In en, this message translates to:
-  /// **'1000 pradha per UTC day'**
-  String get faucetDailyReward;
-
-  /// No description provided for @faucetDailyInfo.
-  ///
-  /// In en, this message translates to:
-  /// **'Claim 1000 pradha per UTC day, available immediately. Claims credit your off-chain balance. Withdrawals to your wallet require at least 1000 pradha and are 1 hour apart. The faucet must have on-chain funds and pays the network fee.'**
-  String get faucetDailyInfo;
-
   /// No description provided for @faucetInfo.
   ///
   /// In en, this message translates to:
-  /// **'Claims credit your off-chain balance. Withdraw to your wallet to move it on-chain, minimum 1000 pradha. The faucet pays network fees. Withdrawals are 1 hour apart. Rewards accrue from 00:00 UTC.'**
-  String get faucetInfo;
+  /// **'Claims credit your off-chain balance. Withdraw to your wallet to move it on-chain, minimum {minimum} pradha. The faucet pays network fees. Withdrawals are 1 hour apart. Rewards accrue from 00:00 UTC.'**
+  String faucetInfo(int minimum);
 
   /// No description provided for @faucetBalance.
   ///
@@ -1225,12 +1201,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Connect a bridge to load participation rewards.'**
   String get faucetUnavailable;
-
-  /// No description provided for @faucetNeedsWallet.
-  ///
-  /// In en, this message translates to:
-  /// **'Create or import a wallet before claiming rewards.'**
-  String get faucetNeedsWallet;
 
   /// No description provided for @faucetNotEligible.
   ///
@@ -1334,12 +1304,6 @@ abstract class AppLocalizations {
   /// **'The faucet has no on-chain funds yet. Your reward balance is unchanged. Contact the operator.'**
   String get faucetUnfunded;
 
-  /// No description provided for @faucetSmallTransferUnsupported.
-  ///
-  /// In en, this message translates to:
-  /// **'The node cannot process this small withdrawal yet. Your reward balance is unchanged. Contact the operator.'**
-  String get faucetSmallTransferUnsupported;
-
   /// No description provided for @faucetWithdrawNotConfigured.
   ///
   /// In en, this message translates to:
@@ -1411,6 +1375,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'A claim is available. The bridge will confirm the amount.'**
   String get faucetLegacyReady;
+
+  /// No description provided for @faucetNothingAccrued.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing accrued yet. Rewards build up over 24 hours.'**
+  String get faucetNothingAccrued;
+
+  /// No description provided for @faucetClaimDaily.
+  ///
+  /// In en, this message translates to:
+  /// **'Claim daily reward'**
+  String get faucetClaimDaily;
+
+  /// No description provided for @faucetDailyReward.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} pradha per UTC day'**
+  String faucetDailyReward(int count);
+
+  /// No description provided for @faucetDailyPoolBounds.
+  ///
+  /// In en, this message translates to:
+  /// **'Current reward bounds: {minimum} to {maximum} pradha, subject to available funds.'**
+  String faucetDailyPoolBounds(int minimum, int maximum);
+
+  /// No description provided for @faucetDailyPoolInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Claim once per UTC day. Today\'s quota depends on the funded daily pool and yesterday\'s claimants. Reward bounds halve every 48 consensus months (4 nominal years). Claims accumulate off-chain; withdraw to your wallet from {minimum} pradha. Withdrawals are 1 hour apart; the faucet pays the network fee.'**
+  String faucetDailyPoolInfo(int minimum);
+
+  /// No description provided for @faucetDailyInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Claim {minimum} pradha per UTC day, available immediately. Claims credit your off-chain balance. Withdrawals to your wallet require at least {minimum} pradha and are 1 hour apart. The faucet must have on-chain funds and pays the network fee.'**
+  String faucetDailyInfo(int minimum);
+
+  /// No description provided for @faucetNeedsWallet.
+  ///
+  /// In en, this message translates to:
+  /// **'Create or import a wallet before claiming rewards.'**
+  String get faucetNeedsWallet;
+
+  /// No description provided for @faucetSmallTransferUnsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'The node cannot process this small withdrawal yet. Your reward balance is unchanged. Contact the operator.'**
+  String get faucetSmallTransferUnsupported;
 }
 
 class _AppLocalizationsDelegate

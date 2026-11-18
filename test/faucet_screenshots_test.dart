@@ -18,6 +18,43 @@ void main() {
 
   for (final scenario in [
     (
+      name: 'faucet_daily_pool_ready_id',
+      locale: 'id',
+      width: 390.0,
+      scale: 1.0,
+      body: dailyPoolBalanceFixture(),
+      failed: false,
+    ),
+    (
+      name: 'faucet_daily_pool_claimed_id',
+      locale: 'id',
+      width: 390.0,
+      scale: 1.0,
+      body: dailyPoolBalanceFixture(balance: 350000, claimed: 350000),
+      failed: false,
+    ),
+    (
+      name: 'faucet_daily_pool_halved_en',
+      locale: 'en',
+      width: 390.0,
+      scale: 1.0,
+      body: dailyPoolBalanceFixture(
+        balance: 2500000,
+        quota: 125000,
+        minReward: 50000,
+        maxReward: 250000,
+      ),
+      failed: false,
+    ),
+    (
+      name: 'faucet_daily_pool_large_text_id',
+      locale: 'id',
+      width: 320.0,
+      scale: 2.0,
+      body: dailyPoolBalanceFixture(),
+      failed: false,
+    ),
+    (
       name: 'faucet_withdraw_ready_id',
       locale: 'id',
       width: 390.0,

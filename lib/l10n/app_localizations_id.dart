@@ -587,22 +587,9 @@ class AppLocalizationsId extends AppLocalizations {
       'Reward hari ini sudah diklaim. Klaim berikutnya tersedia setelah 00:00 UTC besok.';
 
   @override
-  String get faucetNothingAccrued =>
-      'Belum ada yang bisa diklaim. Reward bertambah selama 24 jam.';
-
-  @override
-  String get faucetClaimDaily => 'Klaim reward harian';
-
-  @override
-  String get faucetDailyReward => '1000 pradha per hari UTC';
-
-  @override
-  String get faucetDailyInfo =>
-      'Klaim 1000 pradha per hari UTC, langsung tersedia. Klaim masuk ke saldo off-chain. Penarikan ke wallet minimal 1000 pradha dengan jeda 1 jam. Faucet harus memiliki dana on-chain dan membayar biaya jaringan.';
-
-  @override
-  String get faucetInfo =>
-      'Klaim masuk ke saldo off-chain. Tarik ke wallet agar masuk blockchain, minimum 1000 pradha. Faucet membayar biaya jaringan. Jeda penarikan 1 jam. Reward bertambah sejak 00:00 UTC.';
+  String faucetInfo(int minimum) {
+    return 'Klaim masuk ke saldo off-chain. Tarik ke wallet agar masuk blockchain, minimum $minimum pradha. Faucet membayar biaya jaringan. Jeda penarikan 1 jam. Reward bertambah sejak 00:00 UTC.';
+  }
 
   @override
   String faucetBalance(int count) {
@@ -637,10 +624,6 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get faucetUnavailable =>
       'Hubungkan bridge untuk memuat reward partisipasi.';
-
-  @override
-  String get faucetNeedsWallet =>
-      'Buat atau impor wallet sebelum mengklaim reward.';
 
   @override
   String get faucetNotEligible =>
@@ -704,10 +687,6 @@ class AppLocalizationsId extends AppLocalizations {
       'Faucet belum memiliki dana on-chain. Saldo reward tetap utuh. Hubungi operator.';
 
   @override
-  String get faucetSmallTransferUnsupported =>
-      'Node belum dapat memproses penarikan kecil ini. Saldo reward tetap utuh. Hubungi operator.';
-
-  @override
   String get faucetWithdrawNotConfigured =>
       'Penarikan belum dikonfigurasi. Hubungi operator.';
 
@@ -756,4 +735,39 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get faucetLegacyReady =>
       'Klaim tersedia. Jumlahnya dikonfirmasi oleh bridge.';
+
+  @override
+  String get faucetNothingAccrued =>
+      'Belum ada yang bisa diklaim. Reward bertambah selama 24 jam.';
+
+  @override
+  String get faucetClaimDaily => 'Klaim reward harian';
+
+  @override
+  String faucetDailyReward(int count) {
+    return '$count pradha per hari UTC';
+  }
+
+  @override
+  String faucetDailyPoolBounds(int minimum, int maximum) {
+    return 'Batas reward periode ini: $minimum sampai $maximum pradha, sesuai dana tersedia.';
+  }
+
+  @override
+  String faucetDailyPoolInfo(int minimum) {
+    return 'Klaim sekali per hari UTC. Kuota hari ini bergantung pada dana pool harian dan jumlah pengklaim kemarin. Batas reward dibagi dua setiap 48 bulan konsensus (4 tahun nominal). Klaim terkumpul off-chain; tarik ke wallet mulai $minimum pradha. Jeda penarikan 1 jam; faucet membayar biaya jaringan.';
+  }
+
+  @override
+  String faucetDailyInfo(int minimum) {
+    return 'Klaim $minimum pradha per hari UTC, langsung tersedia. Klaim masuk ke saldo off-chain. Penarikan ke wallet minimal $minimum pradha dengan jeda 1 jam. Faucet harus memiliki dana on-chain dan membayar biaya jaringan.';
+  }
+
+  @override
+  String get faucetNeedsWallet =>
+      'Buat atau impor wallet sebelum mengklaim reward.';
+
+  @override
+  String get faucetSmallTransferUnsupported =>
+      'Node belum dapat memproses penarikan kecil ini. Saldo reward tetap utuh. Hubungi operator.';
 }

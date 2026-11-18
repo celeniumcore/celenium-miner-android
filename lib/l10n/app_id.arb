@@ -271,7 +271,8 @@
   },
   "faucetClaimFailed": "Klaim gagal. Perbarui saldo sebelum mencoba lagi.",
   "faucetAlreadyClaimed": "Reward hari ini sudah diklaim. Klaim berikutnya tersedia setelah 00:00 UTC besok.",
-  "faucetInfo": "Klaim masuk ke saldo off-chain. Tarik ke wallet agar masuk blockchain, minimum 1000 pradha. Faucet membayar biaya jaringan. Jeda penarikan 1 jam. Reward bertambah sejak 00:00 UTC.",
+  "faucetInfo": "Klaim masuk ke saldo off-chain. Tarik ke wallet agar masuk blockchain, minimum {minimum} pradha. Faucet membayar biaya jaringan. Jeda penarikan 1 jam. Reward bertambah sejak 00:00 UTC.",
+  "@faucetInfo": {"placeholders": {"minimum": {"type": "int"}}},
   "faucetBalance": "Saldo off-chain: {count} pradha",
   "@faucetBalance": {
     "placeholders": {
@@ -377,8 +378,14 @@
   "faucetLegacyReady": "Klaim tersedia. Jumlahnya dikonfirmasi oleh bridge.",
   "faucetNothingAccrued": "Belum ada yang bisa diklaim. Reward bertambah selama 24 jam.",
   "faucetClaimDaily": "Klaim reward harian",
-  "faucetDailyReward": "1000 pradha per hari UTC",
-  "faucetDailyInfo": "Klaim 1000 pradha per hari UTC, langsung tersedia. Klaim masuk ke saldo off-chain. Penarikan ke wallet minimal 1000 pradha dengan jeda 1 jam. Faucet harus memiliki dana on-chain dan membayar biaya jaringan.",
+  "faucetDailyReward": "{count} pradha per hari UTC",
+  "@faucetDailyReward": {"placeholders": {"count": {"type": "int"}}},
+  "faucetDailyPoolBounds": "Batas reward periode ini: {minimum} sampai {maximum} pradha, sesuai dana tersedia.",
+  "@faucetDailyPoolBounds": {"placeholders": {"minimum": {"type": "int"}, "maximum": {"type": "int"}}},
+  "faucetDailyPoolInfo": "Klaim sekali per hari UTC. Kuota hari ini bergantung pada dana pool harian dan jumlah pengklaim kemarin. Batas reward dibagi dua setiap 48 bulan konsensus (4 tahun nominal). Klaim terkumpul off-chain; tarik ke wallet mulai {minimum} pradha. Jeda penarikan 1 jam; faucet membayar biaya jaringan.",
+  "@faucetDailyPoolInfo": {"placeholders": {"minimum": {"type": "int"}}},
+  "faucetDailyInfo": "Klaim {minimum} pradha per hari UTC, langsung tersedia. Klaim masuk ke saldo off-chain. Penarikan ke wallet minimal {minimum} pradha dengan jeda 1 jam. Faucet harus memiliki dana on-chain dan membayar biaya jaringan.",
+  "@faucetDailyInfo": {"placeholders": {"minimum": {"type": "int"}}},
   "faucetNeedsWallet": "Buat atau impor wallet sebelum mengklaim reward.",
   "faucetSmallTransferUnsupported": "Node belum dapat memproses penarikan kecil ini. Saldo reward tetap utuh. Hubungi operator."
 }

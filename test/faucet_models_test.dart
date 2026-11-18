@@ -2,6 +2,59 @@ import 'package:celenium_miner/models/bridge.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  test('daily pool bounds and withdrawal minimum come from the bridge', () {
+    final balance = FaucetBalance.tryParse({
+      'balancePradha': 500000,
+      'totalClaimedPradha': 500000,
+      'canClaimToday': true,
+      'rewardModel': 'daily-pool-halving',
+      'rewardPradha': 175000,
+      'dailyRewardPradha': 175000,
+      'minRewardPradha': 50000,
+      'maxRewardPradha': 250000,
+      'minWithdrawPradha': 4000000,
+      'dripDurationSecs': 0,
+    })!;
+    expect(balance.rewardModel, 'daily-pool-halving');
+    expect(balance.dailyRewardPradha, 175000);
+    expect(balance.rewardPradha, 175000);
+    expect(balance.minRewardPradha, 50000);
+    expect(balance.maxRewardPradha, 250000);
+    expect(balance.minWithdrawPradha, 4000000);
+    expect(balance.dripDurationSecs, 0);
+  });
+
+  test(
+    'malformed pool limits invalidate the balance instead of falling back',
+    () {
+      for (final key in [
+        'minWithdrawPradha',
+        'minRewardPradha',
+        'maxRewardPradha',
+      ]) {
+        for (final value in [
+          -1,
+          0.5,
+          double.nan,
+          double.infinity,
+          '2500000',
+          true,
+        ]) {
+          expect(
+            FaucetBalance.tryParse({
+              'balancePradha': 500000,
+              'totalClaimedPradha': 500000,
+              'canClaimToday': true,
+              key: value,
+            }),
+            isNull,
+            reason: '$key: $value',
+          );
+        }
+      }
+    },
+  );
+
   test('quota-one activation and previous-day pending stay explicit', () {
     final balance = FaucetBalance.tryParse({
       'balancePradha': 0,
@@ -65,6 +118,9 @@ void main() {
     );
     expect(balance.rewardPradha, isNull);
     expect(balance.dailyRewardPradha, isNull);
+    expect(balance.minWithdrawPradha, isNull);
+    expect(balance.minRewardPradha, isNull);
+    expect(balance.maxRewardPradha, isNull);
   });
 
   test('claim parses its delta and the dynamic quota', () {
