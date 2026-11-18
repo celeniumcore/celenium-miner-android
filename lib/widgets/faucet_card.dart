@@ -52,6 +52,7 @@ class _FaucetCardState extends State<FaucetCard> with WidgetsBindingObserver {
   bool get _canClaim => !_working;
 
   bool get _dailyPool => _balance?.rewardModel == 'daily-pool-halving';
+  bool get _dailyFixed => _balance?.rewardModel == 'daily-fixed';
   bool get _daily => _dailyPool || _balance?.rewardModel == 'daily-fixed';
   bool get _activating =>
       !_daily &&
@@ -383,7 +384,7 @@ class _FaucetCardState extends State<FaucetCard> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     final l10n = l10nOf(context);
     final balance = _balance;
-    final quota = balance?.dailyRewardPradha;
+    final quota = balance?.dailyRewardPradha ?? (_dailyFixed ? 1000 : null);
     final claimed = balance?.claimedTodayPradha;
     final capped =
         quota != null && quota > 0 && claimed != null && claimed >= quota;
