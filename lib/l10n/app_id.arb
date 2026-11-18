@@ -340,7 +340,7 @@
     }
   },
   "faucetWithdrawReview": "Penarikan perlu diperiksa",
-  "faucetWithdrawUncertain": "Node menerima transaksi, tetapi ledger faucet perlu dipulihkan. Jangan tarik lagi. Hubungi operator dengan TXID ini dan periksa wallet.",
+  "faucetWithdrawUncertain": "Status penarikan belum pasti. Jangan tarik lagi. Hubungi operator dengan TXID ini dan periksa wallet.",
   "faucetWithdrawFailed": "Penarikan gagal",
   "faucetUnfunded": "Faucet belum memiliki dana on-chain. Saldo reward tetap utuh. Hubungi operator.",
   "faucetWithdrawNotConfigured": "Penarikan belum dikonfigurasi. Hubungi operator.",

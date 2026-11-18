@@ -340,7 +340,7 @@
     }
   },
   "faucetWithdrawReview": "Withdrawal needs review",
-  "faucetWithdrawUncertain": "The node accepted a transaction, but the faucet ledger needs recovery. Do not withdraw again. Contact the operator with this TXID and check your wallet.",
+  "faucetWithdrawUncertain": "The withdrawal status is uncertain. Do not withdraw again. Contact the operator with this TXID and check your wallet.",
   "faucetWithdrawFailed": "Withdrawal failed",
   "faucetUnfunded": "The faucet has no on-chain funds yet. Your reward balance is unchanged. Contact the operator.",
   "faucetWithdrawNotConfigured": "Withdrawals are not configured. Contact the operator.",

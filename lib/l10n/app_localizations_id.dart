@@ -677,7 +677,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get faucetWithdrawUncertain =>
-      'Node menerima transaksi, tetapi ledger faucet perlu dipulihkan. Jangan tarik lagi. Hubungi operator dengan TXID ini dan periksa wallet.';
+      'Status penarikan belum pasti. Jangan tarik lagi. Hubungi operator dengan TXID ini dan periksa wallet.';
 
   @override
   String get faucetWithdrawFailed => 'Penarikan gagal';

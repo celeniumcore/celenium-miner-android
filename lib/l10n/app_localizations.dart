@@ -1289,7 +1289,7 @@ abstract class AppLocalizations {
   /// No description provided for @faucetWithdrawUncertain.
   ///
   /// In en, this message translates to:
-  /// **'The node accepted a transaction, but the faucet ledger needs recovery. Do not withdraw again. Contact the operator with this TXID and check your wallet.'**
+  /// **'The withdrawal status is uncertain. Do not withdraw again. Contact the operator with this TXID and check your wallet.'**
   String get faucetWithdrawUncertain;
 
   /// No description provided for @faucetWithdrawFailed.
