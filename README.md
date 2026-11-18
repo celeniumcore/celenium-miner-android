@@ -77,11 +77,12 @@ Catatan mesin: `android/gradle.properties` sengaja dipasang `-Xmx3G` (bukan
 8 GB heap, R8 menukar memori ke swap dan satu build bisa makan 45 menit;
 dengan 3 GB build selesai ~5 menit.
 
-Koneksi app = HTTP API stratum-bridge. Bawaan `1.0.5` sudah menunjuk bridge
-mainnet `http://5.178.98.100:3031`, jadi angka saldo dan daftar worker muncul
-tanpa disetel dulu; mau ke node lain (mis. LAN) tinggal ketik di tab Bridge.
-Menambang tidak bergantung pada alamat ini — stratum-nya hard-coded
-`5.178.98.100:5556` di `lib/services/mining_engine.dart`. Aturan khusus Android
+Koneksi app = HTTP API stratum-bridge. Bawaan memakai bridge mainnet
+`https://celenium.web.id/bridge`, jadi angka saldo dan daftar worker muncul
+tanpa disetel dulu; alamat kustom (mis. LAN) tetap bisa dipasang di tab Bridge.
+Instalasi lama yang menyimpan `http://5.178.98.100:3031` dimigrasikan ke URL
+publik saat dibuka. Menambang tidak bergantung pada alamat API ini; pool stratum
+memakai `celenium.web.id:5556` dari `lib/services/mining_engine.dart`. Aturan khusus Android
 dari spesifikasi (reward maks 40% dan 1 IP = 1 sesi) ditegakkan di sisi bridge,
 bukan di app.
 

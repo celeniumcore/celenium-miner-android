@@ -398,7 +398,10 @@ void main() {
     test('a fresh install points at the mainnet bridge', () async {
       SharedPreferences.setMockInitialValues({});
 
-      expect(SettingsStore.defaultBaseUrl, 'http://5.178.98.100:3031');
+      expect(
+        SettingsStore.defaultBaseUrl,
+        'https://celenium.web.id/bridge',
+      );
       expect(await SettingsStore().baseUrl(), SettingsStore.defaultBaseUrl);
     });
 

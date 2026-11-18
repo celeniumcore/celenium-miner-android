@@ -19,7 +19,10 @@ class SettingsStore {
 
   /// The mainnet bridge, so a fresh install shows real numbers without the
   /// user setting anything. Read-only: the app only ever GETs from it.
-  static const String defaultBaseUrl = 'http://5.178.98.100:3031';
+  static const String defaultBaseUrl = 'https://celenium.web.id/bridge';
+
+  /// Previous mainnet default, retained only to migrate existing installs.
+  static const String previousDefaultBaseUrl = 'http://5.178.98.100:3031';
 
   /// The placeholder shipped up to 1.0.4. On a phone `127.0.0.1` is the phone
   /// itself, so a stored copy of it was never a working address; it is treated
@@ -34,7 +37,12 @@ class SettingsStore {
   Future<String> baseUrl() async {
     final prefs = await _prefs;
     final stored = prefs.getString(_keyBaseUrl);
-    if (stored == null || stored == legacyDefaultBaseUrl) return defaultBaseUrl;
+    if (stored == null ||
+        stored == legacyDefaultBaseUrl ||
+        stored == previousDefaultBaseUrl ||
+        stored == '$previousDefaultBaseUrl/') {
+      return defaultBaseUrl;
+    }
     return stored;
   }
 

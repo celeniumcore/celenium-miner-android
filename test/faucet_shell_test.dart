@@ -37,12 +37,12 @@ void main() {
       String? address;
       final client = MockClient((request) async {
         switch (request.url.path) {
-          case '/api/faucet/balance':
+          case '/bridge/api/faucet/balance':
             address = request.url.queryParameters['address'];
             return jsonResponse(
               balanceFixture(balance: withdrawn ? 0 : 1000, reward: 0),
             );
-          case '/api/faucet/withdraw':
+          case '/bridge/api/faucet/withdraw':
             expect(jsonDecode(request.body), {
               'address': address,
               'amountPradha': 1000,
@@ -55,7 +55,7 @@ void main() {
               'feePradha': 25,
               'balancePradha': 0,
             });
-          case '/api/balance':
+          case '/bridge/api/balance':
             walletReads++;
             expect(request.url.queryParameters['address'], address);
             return jsonResponse({'address': address, 'balancePradha': 1000});

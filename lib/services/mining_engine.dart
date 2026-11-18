@@ -18,7 +18,7 @@ import 'mining_service.dart';
 ///
 /// This is the real miner. It replaces the dead HTTP bridge path
 /// (`POST /api/mining`) that the screen used to drive: the phone hashes against
-/// the VPS pool at `5.178.98.100:5556` and submits shares directly.
+/// the Celenium pool at `celenium.web.id:5556` and submits shares directly.
 ///
 /// The hashing itself runs in [MiningTaskHandler] inside an Android foreground
 /// service, so mining keeps running when the app is swiped away. This engine is
@@ -35,7 +35,7 @@ class MiningEngine extends ChangeNotifier {
 
   /// The pool the phone submits shares to. Hard-coded on purpose: this address
   /// is a configuration detail the user should not have to set.\n
-  static const String host = '5.178.98.100';
+  static const String host = 'celenium.web.id';
   static const int port = 5556;
 
   /// Distinguishes this device in the pool's worker list. Kept stable so a

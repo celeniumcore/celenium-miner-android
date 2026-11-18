@@ -65,7 +65,7 @@ http.Client _connectedBridge() {
   return MockClient((request) async {
     const json = {'content-type': 'application/json'};
     switch (request.url.path) {
-      case '/api/status':
+      case '/bridge/api/status':
         return http.Response(
           jsonEncode(const {
             'celeniumd_address': '127.0.0.1:26510',
@@ -76,7 +76,7 @@ http.Client _connectedBridge() {
           200,
           headers: json,
         );
-      case '/api/stats':
+      case '/bridge/api/stats':
         return http.Response(
           jsonEncode(const {
             'totalBlocks': 4,

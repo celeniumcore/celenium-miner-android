@@ -10,7 +10,7 @@ import 'miner_native.dart';
 /// isolate so the native `celenium_scan` work never blocks the UI thread.
 ///
 /// Protocol notes (all verified byte-for-byte against the VPS bridge at
-/// `5.178.98.100:5556`):
+/// `celenium.web.id:5556`):
 ///
 ///   * `mining.subscribe`  -> `[true, "EthereumStratum/1.0.0"]`
 ///   * `mining.set_extranonce` -> `["XX"]` hex, 4 chars (2-byte u16, the high

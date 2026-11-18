@@ -100,7 +100,7 @@ class _BridgeScreenState extends State<BridgeScreen> {
                             size: 13,
                           ).copyWith(color: Palette.cream),
                           decoration: const InputDecoration(
-                            hintText: 'http://5.178.98.100:3031',
+                            hintText: 'https://celenium.web.id/bridge',
                           ),
                         ),
                         const SizedBox(height: Palette.sm),
